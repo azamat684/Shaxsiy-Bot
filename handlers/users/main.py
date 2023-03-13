@@ -17,7 +17,7 @@ from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
-from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,Azamat,tillar2,tillar3,tillar4,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru
+from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru
 from aiogram.dispatcher import FSMContext
 import qrcode
 import aiofiles
@@ -40,6 +40,7 @@ async def ddd1(message: types.Message,state: FSMContext):
     # Generatsiya qilingan QR kodni foydalanuvchiga yuborish
     with open(file_name, 'rb') as file:
         await message.reply_photo(file)
+        await state.finish()
         
         
 #Ro'yxatdan o'tish Bo'limi
@@ -57,53 +58,75 @@ async def kantakt(message: types.Message):
 @dp.message_handler(text = "🌏 Wikipedia",state="*")
 async def wikipediaa(message: types.Message,state: FSMContext):
     await message.answer("Pastdan o'zinggizga kerakli tilni tanlang💁🏻‍♂️",reply_markup=wiki_til) 
-@dp.message_handler(text = "O'zbek🇺🇿",state="*")
-async def wiki_eng(message: types.Message,state: FSMContext):
+    
+
+
+@dp.message_handler(text = "O'zbek 🇺🇿",state="*")
+async def wiki_uz(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Menga biror so'z yuboring men u haqida malumot chiqaraman (Agar menda bor bo'lsa)")
     await wikipediakuu.uzz.set()
 @dp.message_handler(state=wikipediakuu.uzz)
-async def wiki_eng(message: types.Message,state: FSMContext):
-        matn = message.text
-        wikipedia.set_lang(prefix='uz')
-        w = wikipedia.summary(matn)
-        await message.answer(w)
+async def wiki_uz1(message: types.Message,state: FSMContext):
+    matn = message.text
+    wikipedia.set_lang(prefix='uz')
+    w_uz= wikipedia.summary(matn)
+    pd.options.display.max_rows = 10000
+    try:
+        if len(w_uz) > 50:
+            for x in range(0, len(w_uz), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, w_uz[x:x + 3000])
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, w_uz)
+            await state.finish()
+    except wikipedia.exceptions.PageError as err:
+        await message.answer("🤷🏻‍♂️ Afsuski men malumot topolmadim!")
         await state.finish()
-
-@dp.message_handler(text = "Русский🇷🇺",state='*')
-async def wiki_eng(message: types.Message,state: FSMContext):
+        
+    
+@dp.message_handler(text = "Русский 🇷🇺",state='*')
+async def wiki_ru(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Пришлите мне слово, и я откопаю его (если он у меня есть)")
     await wikipedia_ru.ruu.set()
 @dp.message_handler(state=wikipedia_ru.ruu)
-async def wiki_eng(message: types.Message,state: FSMContext):
+async def wiki_ru1(message: types.Message,state: FSMContext):
     matn = message.text
     wikipedia.set_lang(prefix='ru')
-    w = wikipedia.summary(matn)
+    w_ru = wikipedia.summary(matn)
     pd.options.display.max_rows = 10000
-    if len(w) > 50:
-        for x in range(0, len(w), 100):
+    if len(w_ru) > 50:
+        for x in range(0, len(w_ru), 3000):
             await asyncio.sleep(0.05)
-            await bot.send_message(message.chat.id, w[x:x + 100])
+            await bot.send_message(message.chat.id, w_ru[x:x + 3000])
+            await state.finish()
     else:
-       await bot.send_message(message.chat.id, w)
-    # await message.answer(w)
-    
-    await state.finish()
-@dp.message_handler(text = "English🇺🇸",state='*')
+        await bot.send_message(message.chat.id, w_ru)
+        await state.finish()
+
+# Ingliz tilda wikipedia topish wikipedia
+@dp.message_handler(text = "English 🇺🇸",state='*')
 async def wiki_eng(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Send me a word and I'll dig it up (if I have it)")
     await wikipedia_eng.engg.set()
 @dp.message_handler(state=wikipedia_eng.engg)
-async def wiki_eng(message: types.Message,state: FSMContext):
-        matn = message.text
-        # wikipedia.set_lang(prefix='ru')
-        w = wikipedia.summary(matn)
-        await message.answer(w)
+async def wiki_eng3(message: types.Message,state: FSMContext):
+    matn = message.text
+    wikipedia.set_lang(prefix='en')
+    w_eng = wikipedia.summary(matn)
+    pd.options.display.max_rows = 10000
+    if len(w_eng) > 50:
+        for x in range(0, len(w_eng), 3000):
+            await asyncio.sleep(0.05)
+            await bot.send_message(message.chat.id, w_eng[x:x + 3000])
+            await state.finish()
+    else:
+        await bot.send_message(message.chat.id, w_eng)
         await state.finish()
 
-    
 
 
 
@@ -132,14 +155,14 @@ async def insta_down(message: types.Message,state: FSMContext):
             await message.answer_video(natija['video'],caption="<b>@for_testing_py_bot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         elif text1.startswith("https://www.tiktok.com/"):
-            await message.answer("<b><i>Iltimos biroz kuting video yuklanmoqda</i></b>",parse_mode='HTML')
+            await message.answer("<b>Iltimos biroz kuting video yuklanmoqda</b>",parse_mode='HTML')
             await message.answer_video(natija['video'],caption="<b>@for_testing_py_bot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         else:
             await message.answer("Url manzili xato")
             await state.finish()
     except:
-        await message.answer("<b>Menga faqat <i>Tik Tok</i> videoni havolasini jo'nating</b> ",parse_mode='HTML') 
+        await message.answer("<b>Kechirasiz,Bu url manzil orqali men hech nima topmadim</b> ",parse_mode='HTML') 
         await state.finish()
     
 #Video Yuklash Instagram
@@ -192,8 +215,8 @@ async def admin1_bot(message: types.Message):
 @dp.message_handler(text = "🔙Orqaga",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("◻️Bosh menyuga qaytdinggiz\n🟢Pastdagi menyulardan o'zinggizga keragini tanlang!",reply_markup=markup)
-
+    await message.answer("◻️ Bosh menyuga qaytdinggiz\n🟢Pastdagi menyulardan o'zinggizga keragini tanlang!",reply_markup=markup)
+    
 
 
 #Youtubedan video ko'chirish qismi
@@ -252,13 +275,13 @@ async def button_download(call: types.CallbackQuery):
 @dp.message_handler(text="🔄 Tarjimon",state="*")
 async def tarjimon(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("<b>⚠️OGOHLANTIRISH\nBu funksiya hali yaxshi ishlamaydi biroz vaqtdan so'ng albatda tuzatamiz etiboringgiz uchun raxmat</b>",parse_mode='HTML')
-    await message.answer("Qaysi tildan qaysi tilga tarjima qilmoqchi bo'lsez pastdan menyudan tanlang!",reply_markup=til)
+    await message.answer("Qaysi tildan qaysi tilga tarjima qilmoqchisiz?\nPastdan menyudan tanlang!",reply_markup=til)
 
 #TARJIMON ENG-UZ #1
 @dp.message_handler(text="Eng🇺🇸-Uz🇺🇿",state="*")
-async def eng_uz(message: types.Message):
-    await message.answer("Tarjima qilmoqchi bo'lgan so'zinggizni yuboring")
+async def eng_uz(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Tarjima qilmoqchi bo'lgan so'zingizni yuboring")
     await tillar2.eng_uz.set()
 @dp.message_handler(state=tillar2.eng_uz)
 async def eng_to_uz(message: types.Message,state: FSMContext):
@@ -267,31 +290,28 @@ async def eng_to_uz(message: types.Message,state: FSMContext):
         matn = message.text
         translate = translator.translate(matn,dest='uz')
         await message.answer(f"{message.text} ni o'zbekchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        # await state.finish()
+        await state.finish()
     except:
         await message.answer("Xato😑\nSiz boshqa tilda matn yubordinggiz❌")
-        # await state.finish()
-    finally:
         await state.finish()
 
     
 #TARJIMON UZ-ENG #2
 @dp.message_handler(text="Uz🇺🇿-Eng🇺🇸",state="*")
-async def eng_uz(message: types.Message):
-    await message.answer("Tarjima qilmoqchi bo'lgan so'zinggizni yuboring")
+async def uz_eng(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Tarjima qilmoqchi bo'lgan so'zingizni yuboring")
     await tillar.uz_eng.set()
 @dp.message_handler(state=tillar.uz_eng)
-async def eng1_to_uz(message: types.Message,state: FSMContext):
+async def uz_eng1(message: types.Message,state: FSMContext):
     try:
         translator = Translator()
         matn = message.text
         translate = translator.translate(matn)
         await message.answer(f"{message.text} ni inglizchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        # await state.finish()
+        await state.finish()
     except:
         await message.answer("Xato")
-        # state.finish()
-    finally:
         await state.finish()
     
 #TARJIMON RU-UZ #3
@@ -327,10 +347,27 @@ async def uz_to_ru(message: types.Message,state: FSMContext):
         await message.answer(f"{message.text} ni ruschaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
         await state.finish()
     except:
-        await message.answer("Xato😑\nSiz boshqa tilda matn yubordinggiz❌")
+        await message.answer("Xato 😑\nSiz boshqa tilda matn yubordingiz ❌")
         await state.finish()
-    # finally:
-    #     await state.finish()
+        
+#TARJIMON HOHLAGAN-TIL #5
+@dp.message_handler(text="?-Uz 🇺🇿",state="*")
+async def hohlagan_til_tarjima(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Siz hohlagan tildagi matnni yuboring men o'zbek tiliga tarjima qilib beraman!")
+    await tillar5.hohlagan_til.set()
+    
+@dp.message_handler(state=tillar5.hohlagan_til)
+async def hohlagan_til_tarjima1(message: types.Message,state: FSMContext):
+    try:
+        translator = Translator()
+        matn2 = message.text
+        translate = translator.translate(matn2,dest='uz')
+        await message.answer(f"{message.text} ni o'zbekchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
+        await state.finish()
+    except:
+        await message.answer("Xato 😑\nSiz boshqa tilda matn yubordingiz ❌")
+        await state.finish()
 
 #Ob-Havo bo'limi
 @dp.message_handler(text = "⛅️ Ob-Havo",state="*")

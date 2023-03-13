@@ -19,7 +19,8 @@ class tillar3(StatesGroup):
     
 class tillar4(StatesGroup):
     uz_ru = State()
-
+class tillar5(StatesGroup):
+    hohlagan_til = State()
 class wikipediakuu(StatesGroup):
     uzz = State()
 class wikipedia_ru(StatesGroup):
@@ -29,6 +30,7 @@ class wikipedia_eng(StatesGroup):
 
 class yt_video_save(StatesGroup):
     ytt = State()
+    
 class Azamat(StatesGroup):
     boshlanish = State()
       

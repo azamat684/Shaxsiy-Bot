@@ -7,11 +7,6 @@ markup = ReplyKeyboardMarkup(
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
         [KeyboardButton(text="🔄 Tarjimon"),KeyboardButton(text="📥 Video Yuklash")],
         [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="👨🏻‍💻 Admin")]
-        # [KeyboardButton(text="🔙Orqaga")]
-        
-        # [KeyboardButton(text="👨🏻‍💻ADMIN BN BOG'LANISH👨🏻‍💻")],
-        # [KeyboardButton(text="🌐WIKIPEDIYA BO'LIMI🌐")],
-        # [KeyboardButton(text="📥YOUTUBE VIDEO DOWNLOAD📥")]
     ],
     resize_keyboard=True,
     one_time_keyboard=True
@@ -21,9 +16,10 @@ markup = ReplyKeyboardMarkup(
 
 
 til = ReplyKeyboardMarkup(resize_keyboard=True)
+til.add(KeyboardButton(text="🔙Orqaga"),KeyboardButton(text="?-Uz 🇺🇿"))
 til.add("Eng🇺🇸-Uz🇺🇿","Uz🇺🇿-Eng🇺🇸")
 til.add("Ru🇷🇺-Uz🇺🇿","Uz🇺🇿-Ru🇷🇺")
-til.add(KeyboardButton(text="🔙Orqaga"))
+
 
 
 
@@ -43,6 +39,6 @@ registratsiya.add(KeyboardButton(text="📞 Telefon Raqamni jo'natish",request_c
 registratsiya.add(KeyboardButton(text="🔙Orqaga"))
 
 wiki_til = ReplyKeyboardMarkup(resize_keyboard=True)
-wiki_til.add(KeyboardButton(text="Русский🇷🇺"))
-wiki_til.add(KeyboardButton(text="O'zbek🇺🇿"),KeyboardButton(text="English🇺🇸"))
+wiki_til.add(KeyboardButton(text="O'zbek 🇺🇿"),KeyboardButton(text="Русский 🇷🇺"))
+wiki_til.add(KeyboardButton(text="English 🇺🇸"))
 wiki_til.add(KeyboardButton(text="🔙Orqaga"))

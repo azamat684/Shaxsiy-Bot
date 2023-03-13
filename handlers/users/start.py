@@ -1,3 +1,4 @@
+# import psycopg2
 import sqlite3
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
