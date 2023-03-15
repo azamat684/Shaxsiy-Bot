@@ -33,4 +33,12 @@ class yt_video_save(StatesGroup):
     
 class Azamat(StatesGroup):
     boshlanish = State()
-      
+    
+class txt_to_voice(StatesGroup):
+    voicee = State()
+
+class reklama(StatesGroup):
+    reklamaa = State()
+    
+    
+

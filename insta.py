@@ -13,11 +13,10 @@ def instadownloader(link):
     response = requests.request("GET", url, headers=headers, params=querystring)
     rest = json.loads(response.text)
     print(response.text[3])
-    
-    dict = {}
     if 'error' in rest:
         return 'Bad'
     else:
+        dict = {}
         if rest['Type'] == 'Post-Image':
             dict['type'] = 'image'
             dict['media'] = rest['media']
@@ -32,4 +31,3 @@ def instadownloader(link):
             return dict
         else:
             return 'Bad'
-    

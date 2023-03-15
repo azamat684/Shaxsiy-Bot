@@ -9,7 +9,7 @@ async def bot_help(message: types.Message,state: FSMContext):
         await state.finish()
         bot_info = await bot.get_me()
         text = (f"Bu bot nima qila oladi?\n\n"
-                f"Ushbu bot orqali siz <b>Youtube</b>,<b>Instagram</b>,<b>Tik Tok</b> ishtimoiy tarmoqlaridan <b>video rasmlarni</b> yuklab olishingiz va <b>Ob-Havo</b> malumotlari haqida bilib olishingiz,To'g'ridan to'g'ri <b>google</b> dan biror narsa xaqida malumot so'rashingiz va <b>Tarjimondan</b> foydalanishingiz mumkin 😊\n\nBotni Kamandalari\n\n"
+                f"Ushbu bot orqali siz \n\n▪️ <b>Youtube</b>,<b>Instagram</b>,<b>Tik Tok</b> ishtimoiy tarmoqlaridan <b>video rasmlarni</b> yuklab olishingiz\n\n<b>▪️ Ob-Havo</b> malumotlari haqida bilib olishingiz\n\n▪️ To'g'ridan to'g'ri <b>google</b> dan biror narsa xaqida malumot so'rashingiz \n\n▪️ <b>Matnli</b> xabarlarni <b>Ovozli</b> xabarga aylatirishingiz\nva\n▪️ <b>Tarjimondan</b> foydalanishingiz mumkin 😊\n\nBotni Kamandalari\n\n"
                 f"/start - Botni qayta ishga tushirish ♻️\n"
                 f"/qrcode - Qrcode yasash *️⃣\n"
                 f"/help - Botni qanday ishlatish 🆘\n\n"
