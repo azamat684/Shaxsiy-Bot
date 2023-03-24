@@ -1,3 +1,13 @@
-aiogram~=2.14
-environs~=8.0.0
+aiogram
+environs
 pandas
+googletrans==3.1.0a0
+youtube-search
+request
+gTTS
+openai
+pytube
+aiofiles
+qrcode
+wikipedia
+

@@ -3,15 +3,20 @@ from aiogram.types import ReplyKeyboardMarkup,KeyboardButton
 
 markup = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="Ro'yxatdan o'tish ✅"),KeyboardButton(text="💬 Text to Voice 🗣")],
+        [KeyboardButton(text="✅ Register"),KeyboardButton(text="💬 Text to Voice 🗣")],
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
         [KeyboardButton(text="🔄 Tarjimon"),KeyboardButton(text="📥 Video Yuklash")],
-        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="👨🏻‍💻 Admin")]
+        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")],
+        [KeyboardButton(text="👨🏻‍💻 Dasturchi")]
     ],
     resize_keyboard=True,
     one_time_keyboard=True
 )
 
+
+chatni_yakunlash = ReplyKeyboardMarkup(keyboard=[
+    [KeyboardButton(text="❌ Chatni yakunlash")]
+],resize_keyboard=True)
 
 
 
@@ -23,7 +28,7 @@ til.add("Ru🇷🇺-Uz🇺🇿","Uz🇺🇿-Ru🇷🇺")
 
 
 
-shaharlar = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+shaharlar = ReplyKeyboardMarkup(resize_keyboard=True)
 shaharlar.row("Toshkent","Qashqadaryo")
 shaharlar.row("Buxoro","Navoiy")
 shaharlar.row("Samarqand","Jizzax")

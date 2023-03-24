@@ -2,7 +2,7 @@ import sqlite3
 
 
 class Database:
-    def __init__(self, path_to_db="C:/Users/Kazbek/Desktop/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db"):
+    def __init__(self, path_to_db="main.db"):
         self.path_to_db = path_to_db
 
     @property
@@ -29,16 +29,26 @@ class Database:
 
     def create_table_users(self):
         sql = """
-        CREATE TABLE Users_1 (
+        CREATE TABLE Users (
             id int NOT NULL,
             Name varchar(255) NOT NULL,
-            email varchar(100),
             language varchar(3),
             PRIMARY KEY (id)
             );
 """
         self.execute(sql, commit=True)
 
+#     def create_table_users_phone_numbers(self):
+#         sql = """
+#         CREATE TABLE Phone_numbers (
+#             PRIMARY KEY (id),
+#             id int NOT NULL,
+#             Name varchar(255) NOT NULL,
+#             language varchar(3),
+#             phone_number VARCHAR(255)
+#             );
+# """
+        self.execute(sql, commit=True)
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -46,14 +56,21 @@ class Database:
         ])
         return sql, tuple(parameters.values())
 
-    def add_user(self, id: int, name: str, email: str=None, language: str = 'uz'):
+    def add_user(self, id: int, name: str,language: str):
         # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
 
         sql = """
-        INSERT INTO Users(id, Name, email, language) VALUES(?, ?, ?, ?)
+        INSERT INTO Users(id, Name, language) VALUES(?, ?, ?)
         """
-        self.execute(sql, parameters=(id, name, email, language), commit=True)
+        self.execute(sql, parameters=(id, name, language), commit=True)
+    
+    # def add_user_phone_numbers(self, id: int, name: str, language: str,phone_number: str):
 
+    #     sql = """
+    #     INSERT INTO Phone_numbers(id, Name, language,phone_number) VALUES(?, ?, ?, ?)
+    #     """
+    #     self.execute(sql, parameters=(id, name, language), commit=True)
+    
     def select_all_users(self):
         sql = """
         SELECT * FROM Users

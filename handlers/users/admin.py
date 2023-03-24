@@ -24,7 +24,7 @@ async def get_all_users(message: types.Message):
         for x in range(0, len(df), 50):
             await bot.send_message(message.chat.id, df[x:x + 50])
     else:
-       await bot.send_message(message.chat.id, df)
+        await bot.send_message(message.chat.id, df)
        
 
 @dp.message_handler(text="/reklama", user_id=ADMINS, state="*")

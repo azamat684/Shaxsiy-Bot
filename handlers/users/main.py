@@ -15,12 +15,14 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram import executor
 from loader import dp, db, bot
 from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til
+from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back
 from data.config import CHANNELS
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
 from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru
+from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr
 from aiogram.dispatcher import FSMContext
 import qrcode
 import aiofiles
@@ -51,7 +53,7 @@ async def reg(message: types.Message,state: FSMContext):
     await message.answer("◻️ Bosh menyuga qaytdinggiz\n🟢Pastdagi menyulardan o'zinggizga keragini tanlang!",reply_markup=markup)
         
 #Ro'yxatdan o'tish Bo'limi
-@dp.message_handler(text = "Ro'yxatdan o'tish ✅",state="*")
+@dp.message_handler(text = "✅ Register",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer(f"Telefon raqaminggizni jo'nating!\n\nPastda menyuda <b>'📞 Telefon Raqamni jo'natish'</b> tugmasi bor o'shani bosing",parse_mode='HTML',reply_markup=registratsiya)
@@ -60,16 +62,79 @@ async def reg(message: types.Message,state: FSMContext):
 async def kantakt(message: types.Message):
     await message.answer(f"Sizni raqaminggiz muvvofaqiyatli saqlandi",reply_markup=markup)
 
+#Youtubedan video yuklash bo'limi 
+@dp.message_handler(text="📥 Youtube",state="*")
+async def eng_uz(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.reply("Menga <b>YOUTUBE</b> dagi videoni havolasini jo'nating\n\n⚠️Eslatma: Havolani jo'natganingizdan keyin biroz kuting,\nVideoni yuklab bermasligiham mumkin!",parse_mode="HTML")
+    await yt_video_save.ytt.set()
 
 #Matnni ovozli xabar qilish
 @dp.message_handler(text = "💬 Text to Voice 🗣",state="*")
 async def text_to_voice(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Menga biror matn yuboring men ingliz tilda ovozli xabar qilib beraman!")
-    await txt_to_voice.voicee.set()
+    await message.reply("Xabarni qaysi tilda ovozl xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!",reply_markup=txt_to_voice_lang)
     
-@dp.message_handler(state=txt_to_voice.voicee)
-async def text_to_voice1(message: types.Message,state: FSMContext):
+@dp.callback_query_handler(text='txt_voice_back',state="*")
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("Xabarni qaysi tilda ovozl xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!",reply_markup=txt_to_voice_lang)
+    await state.finish()
+
+@dp.callback_query_handler(text='uz',state="*")
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await state.finish()
+    await call.answer("❌ Mendagi malumotlar o'zbek tilini qo'llab quvvatlamaydi")
+
+@dp.callback_query_handler(text='en')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Ingliz tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_en.speak_en.set()
+    
+@dp.callback_query_handler(text='ru')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Rus tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_ru.speak_ru.set()
+    
+@dp.callback_query_handler(text='es')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Ispan tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_es.speak_es.set()
+    
+@dp.callback_query_handler(text='pt')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Portugal tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_pt.speak_pt.set()
+    
+@dp.callback_query_handler(text='fr')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Frantsuz tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_fr.speak_fr.set()
+    
+@dp.callback_query_handler(text='de')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Nemis tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_de.speak_de.set()
+
+
+@dp.callback_query_handler(text='hi')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Hind tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_hi.speak_hi.set()
+
+
+@dp.callback_query_handler(text='tr')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Turk tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_tr.speak_tr.set()
+    
+@dp.callback_query_handler(text='ar')
+async def txt_eng(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<i>Yaxshi Turk tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await txt_to_voice_ar.speak_ar.set()
+    
+
+@dp.message_handler(state=txt_to_voice_en.speak_en)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
     text = message.text
     audio = BytesIO()
     tts = gTTS(text=text, lang='en',slow=False)
@@ -77,6 +142,103 @@ async def text_to_voice1(message: types.Message,state: FSMContext):
     audio.seek(0)
     await message.reply_voice(voice=audio)
     await state.finish()
+
+
+    
+@dp.message_handler(state=txt_to_voice_ru.speak_ru)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='ru',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+    
+
+@dp.message_handler(state=txt_to_voice_es.speak_es)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='es',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+    
+
+@dp.message_handler(state=txt_to_voice_pt.speak_pt)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='pt',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+    
+    
+@dp.message_handler(state=txt_to_voice_fr.speak_fr)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='fr',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+
+    
+@dp.message_handler(state=txt_to_voice_de.speak_de)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='de',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+
+    
+@dp.message_handler(state=txt_to_voice_hi.speak_hi)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='hi',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+
+    
+@dp.message_handler(state=txt_to_voice_tr.speak_tr)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='tr',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+    
+
+@dp.message_handler(state=txt_to_voice_ar.speak_ar)
+async def text_to_voice_en(message: types.Message,state: FSMContext):
+    text = message.text
+    audio = BytesIO()
+    tts = gTTS(text=text, lang='ar',slow=False)
+    tts.write_to_fp(audio)
+    audio.seek(0)
+    await message.reply_voice(voice=audio)
+    await state.finish()
+    
+@dp.callback_query_handler(text="txt_voice_back2",state="*")
+async def txt_voice_back2(call: types.CallbackQuery,state: FSMContext):
+    await state.finish()
+    await call.message.delete()
+    await call.answer("Siz asosiy bo'limga qaytdingiz")
+    await call.message.answer(f"Siz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
+
 
 #Wikipedia Bo'limi
 @dp.message_handler(text = "🌏 Wikipedia",state="*")
@@ -189,11 +351,11 @@ async def insta_down(message: types.Message,state: FSMContext):
         text1 = message.text
         if text1.startswith("https://vm.tiktok.com/" and "https://vt.tiktok.com/"):
             await message.answer("<b>Iltimos biroz kuting video yuklanmoqda</b>",parse_mode='HTML')
-            await message.answer_video(natija['video'],caption="<b>@for_testing_py_bot orqali yuklandi 📥</b>",parse_mode='HTML')
+            await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         elif text1.startswith("https://www.tiktok.com/"):
             await message.answer("<b>Iltimos biroz kuting video yuklanmoqda</b>",parse_mode='HTML')
-            await message.answer_video(natija['video'],caption="<b>@for_testing_py_bot orqali yuklandi 📥</b>",parse_mode='HTML')
+            await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         else:
             await message.answer("Url manzili xato")
@@ -214,15 +376,14 @@ async def insta_fayl(message: types.Message,state: FSMContext):
             await state.finish()
         else:
             if data['type'] == 'image':
-                await message.answer_photo(photo=data['media'],caption=f"<b>@for_testing_py_bot orqali yuklandi</b>",parse_mode='HTML')
+                await message.answer_photo(photo=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'video':
-                await message.answer_video(video=data['media'],caption="<b>@for_testing_py_bot orqali yuklandi</b>",parse_mode='HTML')
+                await message.answer_video(video=data['media'],caption="<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'carousel':
                 for i in data['media']:
-                    await message.answer_photo(photo=i,caption="<b>@for_testing_py_bot orqali yuklandi</b>",parse_mode='HTML')
-                    # await bot.send_document(document=i,caption="<b>@for_testing_py_bot orqali yuklandi</b>",parse_mode='HTML',)
+                    await message.answer_photo(photo=i,caption="<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                     await state.finish()
             else:
                 await message.answer("<b>Bu url manzil bo'yicha hech narsa topolmadim</b>")
@@ -240,23 +401,16 @@ async def orqagaa(call: types.CallbackQuery,state: FSMContext):
 
 
 #Admin bo'limi
-@dp.message_handler(text = "👨🏻‍💻 Admin",state="*")
+@dp.message_handler(text = "👨🏻‍💻 Dasturchi",state="*")
 async def admin1_bot(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatinggiz bo'lsa <a href='https://t.me/azikk_0418'>Admin</a> ga murojat qilishingiz mumkin\n<strong>Bizning botdan foydalanayotganinggiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
     
-
-
 #Youtubedan video ko'chirish qismi
-@dp.message_handler(text="📥 Youtube",state="*")
-async def eng_uz(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.reply("Menga <b>YOUTUBE</b> dagi videoni havolasini jo'nating",parse_mode="HTML")
-    await yt_video_save.ytt.set()
 @dp.message_handler(state=yt_video_save.ytt)
 async def youtube(message: types.Message,state: FSMContext):   
-      if message.text.startswith('https://youtube.com') or message.text.startswith('https://www.youtube.com/') or message.text.startswith('https://youtu.be/'):
+      if message.text.startswith('https://youtube.com') or message.text.startswith('https://www.youtube.com/') or message.text.startswith('https://youtu.be/') or message.text.startswith('http://youtube.com/') or message.text.startswith('http://youtu.be/'):
             url = message.text
             yt = YouTube(url)
             title = yt.title
@@ -269,22 +423,23 @@ async def youtube(message: types.Message,state: FSMContext):
             views = yt.views
             picture = yt.thumbnail_url
  
-            keyboard = types.InlineKeyboardMarkup()
-            keyboard.add(types.InlineKeyboardButton(text="Yuklanmoq", callback_data="download"))
+            btn_down = types.InlineKeyboardMarkup()
+            btn_down.add(types.InlineKeyboardButton(text="Yuklanmoq", callback_data="download"))
             await message.answer_photo(f'{picture}', caption=f"📹 <b>{title}</b> <a href='{url}'>→</a> \n" #Title#
                                  f"👤 <b>{author}</b> <a href='{channel}'>→</a> \n" #Author Of Channel# 
                                  f"⚙️ <b>Kengayish —</b> <code>{resolution}</code> \n" ##
                                  f"🗂 <b>Video Hajmi —</b> <code>{round(file_size * 0.000001, 2)}MB</code> \n" #File Size#
                                  f"⏳ <b>Vaqti —</b> <code>{str(timedelta(seconds=length))}</code> \n" #Length#
                                  f"🗓 <b>Qoyilgan sana —</b> <code>{date_published}</code> \n" #Date Published#
-                                 f"👁 <b>Korilganlar —</b> <code>{views:,}</code> \n", parse_mode='HTML', reply_markup=keyboard) #Views#
+                                 f"👁 <b>Korilganlar —</b> <code>{views:,}</code> \n", parse_mode='HTML', reply_markup=btn_down) #Views#
       else:
             await message.answer(f"❗️<b>Bu Url Orqali hechnima topilmadi!</b>", parse_mode='HTML')
+            await state.finish()
             
             
 
 @dp.callback_query_handler(text="download")
-async def button_download(call: types.CallbackQuery):
+async def button_download(call: types.CallbackQuery,state: FSMContext):
       url = call.message.html_text
       yt = YouTube(url)
       title = yt.title
@@ -298,6 +453,7 @@ async def button_download(call: types.CallbackQuery):
                                     f"👤 <b>{author}</b> \n\n" #Author Of Channel#
                                     f"⚙️ <b>Sifati —</b> <code>{resolution}</code> \n"
                                     f"📥 <b>{bot_info.username} orqali yuklab olindi!</b>", parse_mode='HTML')
+            await state.finish()
             os.remove(f"{call.message.chat.id}/{call.message.chat.id}_{yt.title}")
     
 #Tarjimon Bo'limi
@@ -649,4 +805,3 @@ async def ob_havo_lyuboi_joy(message: types.Message,state: FSMContext):
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
         await state.finish()
-
