@@ -8,7 +8,7 @@ import asyncio
 
 ########### ChatGPT Bot ##############
 
-openai.api_key = "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"
+openai.api_key = "your_api_key"
 
 def chat_with_gpt(messages):
     completion = openai.ChatCompletion.create(
