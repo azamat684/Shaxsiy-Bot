@@ -5,10 +5,11 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from states.state import ChatGPT
 import asyncio
+from data.config import openai_apikey
 
 ########### ChatGPT Bot ##############
 
-openai.api_key = "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"
+openai.api_key = openai_apikey
 
 def chat_with_gpt(messages):
     completion = openai.ChatCompletion.create(

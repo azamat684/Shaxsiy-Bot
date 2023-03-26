@@ -14,6 +14,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram import executor
 from loader import dp, db, bot
+from .transliterated import to_cyrillic,to_latin
 from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til
 from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back
 from data.config import CHANNELS
@@ -21,7 +22,7 @@ from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
-from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru
+from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru,kiril_lotin_kiril
 from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr
 from aiogram.dispatcher import FSMContext
 import qrcode
@@ -499,8 +500,41 @@ async def hohlagan_til_tarjima(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Siz hohlagan tildagi matnni yuboring men o'zbek tiliga tarjima qilib beraman!")
     await tillar5.hohlagan_til.set()
+    
+    
+#TARJIMON Кирил-Lotin #6
+@dp.message_handler(text = "Кирил-Lotin",state="*")
+async def kiril_lotin1(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("<b>Кирил tilidan Lotin tiliga o'tkazish uchun xabar yuboring...</b>",parse_mode='HTML')
+    await kiril_lotin_kiril.to_lotin.set()
+    
+    
+#TARJIMON Lotin-Кирил #7
+@dp.message_handler(text = "Lotin-Кирил",state="*")
+async def lotin_kiril1(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("<b>Lotin тилидан Кирил тилига о'тказиш учун хабар юборинг...</b>",parse_mode='HTML')
+    await kiril_lotin_kiril.to_kiril.set()
 
+@dp.message_handler(state=kiril_lotin_kiril.to_lotin)
+async def kiril_lotin2(message: types.Message,state: FSMContext):
+    xabar = message.text
+    if xabar.isascii():
+        await message.answer(to_latin(xabar))
+    else:
+        await message.answer(to_latin(xabar))
+        
+    
 
+    
+@dp.message_handler(state=kiril_lotin_kiril.to_kiril)
+async def lotin_kiril2(message: types.Message,state: FSMContext):
+    xabar = message.text
+    if xabar.isascii():
+        await message.answer(to_cyrillic(xabar))
+    else:
+        await message.answer(to_cyrillic(xabar))
 
 @dp.message_handler(state=tillar2.eng_uz)
 async def eng_to_uz(message: types.Message,state: FSMContext):

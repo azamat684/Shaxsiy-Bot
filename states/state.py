@@ -57,7 +57,9 @@ class tillar4(StatesGroup):
     
 class tillar5(StatesGroup):
     hohlagan_til = State()
-
+class kiril_lotin_kiril(StatesGroup):
+    to_kiril = State()
+    to_lotin = State()
 #ChatGPT uchun
 class ChatGPT(StatesGroup):
     start = State()

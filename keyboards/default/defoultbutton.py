@@ -24,6 +24,7 @@ til = ReplyKeyboardMarkup(resize_keyboard=True)
 til.add(KeyboardButton(text="🔙Orqaga"),KeyboardButton(text="?-Uz 🇺🇿"))
 til.add("Eng🇺🇸-Uz🇺🇿","Uz🇺🇿-Eng🇺🇸")
 til.add("Ru🇷🇺-Uz🇺🇿","Uz🇺🇿-Ru🇷🇺")
+til.add("Кирил-Lotin","Lotin-Кирил")
 
 
 

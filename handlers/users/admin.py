@@ -27,6 +27,7 @@ async def get_all_users(message: types.Message):
         await bot.send_message(message.chat.id, df)
        
 
+
 @dp.message_handler(text="/reklama", user_id=ADMINS, state="*")
 async def optional_ad(message: types.Message, state: FSMContext):
     await state.finish()
