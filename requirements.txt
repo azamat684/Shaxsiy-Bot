@@ -3,7 +3,7 @@ environs
 pandas
 googletrans==3.1.0a0
 youtube-search
-request
+requests
 gTTS
 openai
 pytube

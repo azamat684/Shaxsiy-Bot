@@ -9,8 +9,7 @@ markup = ReplyKeyboardMarkup(
         [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")],
         [KeyboardButton(text="👨🏻‍💻 Dasturchi")]
     ],
-    resize_keyboard=True,
-    one_time_keyboard=True
+    resize_keyboard=True
 )
 
 
@@ -45,6 +44,5 @@ registratsiya.add(KeyboardButton(text="📞 Telefon Raqamni jo'natish",request_c
 registratsiya.add(KeyboardButton(text="🔙Orqaga"))
 
 wiki_til = ReplyKeyboardMarkup(resize_keyboard=True)
-wiki_til.add(KeyboardButton(text="O'zbek 🇺🇿"),KeyboardButton(text="Русский 🇷🇺"))
-wiki_til.add(KeyboardButton(text="English 🇺🇸"))
-wiki_til.add(KeyboardButton(text="🔙Orqaga"))
+wiki_til.add(KeyboardButton(text="🔙Orqaga"),KeyboardButton(text="O'zbek 🇺🇿"))
+wiki_til.add(KeyboardButton(text="English 🇺🇸"),KeyboardButton(text="Русский 🇷🇺"))

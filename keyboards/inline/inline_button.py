@@ -1,7 +1,8 @@
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 
 inline_markup = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Tik Tok",callback_data="tik_tok"),InlineKeyboardButton(text="Instagram",callback_data="instagram")]
+    [InlineKeyboardButton(text="Tik Tok",callback_data="tik_tok"),InlineKeyboardButton(text="Instagram",callback_data="instagram")],
+    [InlineKeyboardButton(text='↩️ Asosiy menyu', callback_data='txt_voice_back2')]
 ])
 
 back = InlineKeyboardMarkup(inline_keyboard=[

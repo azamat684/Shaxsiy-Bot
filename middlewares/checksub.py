@@ -5,7 +5,7 @@ from aiogram.dispatcher.middlewares import BaseMiddleware
 from data.config import CHANNELS
 from utils.misc import subscription
 from loader import bot
-
+from keyboards.inline.subscription import check_button
 
 class BigBrother(BaseMiddleware):
     async def on_pre_process_update(self, update: types.Update, data: dict):
@@ -29,8 +29,8 @@ class BigBrother(BaseMiddleware):
             channel = await bot.get_chat(channel)
             if not status:
                 invite_link = await channel.export_invite_link()
-                result += (f"❌ <a href='{invite_link}'><b>{channel.title}</b></a>\n")
+                result += (f"Siz bizni kanallardan chiqib ketdingiz!\n\n❌ <a href='{invite_link}'><b>{channel.title}</b></a>\n")
                 
         if not final_status:
-            await update.message.answer(result, disable_web_page_preview=True)
+            await update.message.answer(result, disable_web_page_preview=True,reply_markup=check_button)
             raise CancelHandler()

@@ -33,7 +33,7 @@ import pandas as pd
 @dp.message_handler(commands=['qrcode'],state="*")
 async def qrcode_make(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Menga qrcode uchun biror matn yoki raqam yuboring!")
+    await message.reply("Menga qrcode yasash uchun biror matn yuboring!")
     await qrcodee.codee.set()
 
 @dp.message_handler(state=qrcodee.codee)
@@ -51,7 +51,7 @@ async def ddd1(message: types.Message,state: FSMContext):
 @dp.message_handler(text = "🔙Orqaga",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("◻️ Bosh menyuga qaytdinggiz\n🟢Pastdagi menyulardan o'zinggizga keragini tanlang!",reply_markup=markup)
+    await message.answer("Siz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
         
 #Ro'yxatdan o'tish Bo'limi
 @dp.message_handler(text = "✅ Register",state="*")
@@ -67,7 +67,7 @@ async def kantakt(message: types.Message):
 @dp.message_handler(text="📥 Youtube",state="*")
 async def eng_uz(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Menga <b>YOUTUBE</b> dagi videoni havolasini jo'nating\n\n⚠️Eslatma: Havolani jo'natganingizdan keyin biroz kuting,\nVideoni yuklab bermasligiham mumkin!",parse_mode="HTML")
+    await message.reply("Menga <b>youtube</b> dagi biror bir videoni havolasini jo'nating\n\n⚠️Eslatma: Havolani jo'natganingizdan keyin biroz kuting,\nVideoni yuklab bermasligiham mumkin!",parse_mode="HTML")
     await yt_video_save.ytt.set()
 
 #Matnni ovozli xabar qilish
@@ -237,7 +237,6 @@ async def text_to_voice_en(message: types.Message,state: FSMContext):
 async def txt_voice_back2(call: types.CallbackQuery,state: FSMContext):
     await state.finish()
     await call.message.delete()
-    await call.answer("Siz asosiy bo'limga qaytdingiz")
     await call.message.answer(f"Siz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
 
 
@@ -245,34 +244,34 @@ async def txt_voice_back2(call: types.CallbackQuery,state: FSMContext):
 @dp.message_handler(text = "🌏 Wikipedia",state="*")
 async def wikipediaa(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("Pastdan o'zinggizga kerakli tilni tanlang💁🏻‍♂️",reply_markup=wiki_til) 
+    await message.answer("Malumotlar qaysi tilda chiqsin?",reply_markup=wiki_til) 
     
 # Ingliz tilda wikipedia topish wikipedia
 @dp.message_handler(text = "English 🇺🇸",state='*')
 async def wiki_eng(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Send me a word and I'll dig it up (if I have it)")
+    await message.reply("What do you need information about?")
     await wikipedia_eng.engg.set()
 
 @dp.message_handler(text = "O'zbek 🇺🇿",state="*")
 async def wiki_uz(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Menga biror so'z yuboring men u haqida malumot chiqaraman (Agar menda bor bo'lsa)")
+    await message.reply("Nima haqida malumot kerak?")
     await wikipediakuu.uzz.set()
     
 @dp.message_handler(text = "Русский 🇷🇺",state='*')
 async def wiki_ru(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Пришлите мне слово, и я откопаю его (если он у меня есть)")
+    await message.reply("О чем вам нужна информация?")
     await wikipedia_ru.ruu.set()
     
 @dp.message_handler(state=wikipediakuu.uzz)
 async def wiki_uz1(message: types.Message,state: FSMContext):
-    matn = message.text
-    wikipedia.set_lang(prefix='uz')
-    w_uz= wikipedia.summary(matn)
-    pd.options.display.max_rows = 10000
     try:
+        matn = message.text
+        wikipedia.set_lang(prefix='uz')
+        w_uz= wikipedia.summary(matn)
+        pd.options.display.max_rows = 10000
         if len(w_uz) > 50:
             for x in range(0, len(w_uz), 3000):
                 await asyncio.sleep(0.05)
@@ -281,43 +280,48 @@ async def wiki_uz1(message: types.Message,state: FSMContext):
         else:
             await bot.send_message(message.chat.id, w_uz)
             await state.finish()
-    except wikipedia.exceptions.PageError as err:
-        await message.answer("🤷🏻‍♂️ Afsuski men malumot topolmadim!")
+    except Exception:
+        await message.reply("🤷🏻‍♂️ Afsuski men malumot topolmadim!")
         await state.finish()
         
     
 
 @dp.message_handler(state=wikipedia_ru.ruu)
 async def wiki_ru1(message: types.Message,state: FSMContext):
-    matn = message.text
-    wikipedia.set_lang(prefix='ru')
-    w_ru = wikipedia.summary(matn)
-    pd.options.display.max_rows = 10000
-    if len(w_ru) > 50:
-        for x in range(0, len(w_ru), 3000):
-            await asyncio.sleep(0.05)
-            await bot.send_message(message.chat.id, w_ru[x:x + 3000])
+    try:
+        matn = message.text
+        wikipedia.set_lang(prefix='ru')
+        w_ru = wikipedia.summary(matn)
+        pd.options.display.max_rows = 10000
+        if len(w_ru) > 50:
+            for x in range(0, len(w_ru), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, w_ru[x:x + 3000])
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, w_ru)
             await state.finish()
-    else:
-        await bot.send_message(message.chat.id, w_ru)
-        await state.finish()
-
+    except Exception:
+        await message.reply("🤷🏻‍♂️ К сожалению, никакой информации найти не удалось!")
 
 @dp.message_handler(state=wikipedia_eng.engg)
 async def wiki_eng3(message: types.Message,state: FSMContext):
-    matn = message.text
-    wikipedia.set_lang(prefix='en')
-    w_eng = wikipedia.summary(matn)
-    pd.options.display.max_rows = 10000
-    if len(w_eng) > 50:
-        for x in range(0, len(w_eng), 3000):
-            await asyncio.sleep(0.05)
-            await bot.send_message(message.chat.id, w_eng[x:x + 3000])
+    try:
+        matn = message.text
+        wikipedia.set_lang(prefix='en')
+        w_eng = wikipedia.summary(matn)
+        pd.options.display.max_rows = 10000
+        if len(w_eng) > 50:
+            for x in range(0, len(w_eng), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, w_eng[x:x + 3000])
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, w_eng)
             await state.finish()
-    else:
-        await bot.send_message(message.chat.id, w_eng)
+    except Exception:
+        await message.reply("🤷🏻‍♂️ Unfortunately, I couldn't find any information!")
         await state.finish()
-
 
 
 
@@ -332,7 +336,7 @@ async def vd_yuk(message: types.Message,state: FSMContext):
 #Video Yuklash Tik Tok
 @dp.callback_query_handler(text="tik_tok",state="*")
 async def tik_tok(call: types.CallbackQuery,state: FSMContext):
-    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni url manzilini yuboring</b>",parse_mode='HTML',reply_markup=back)
+    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
     await video_yuklash_tiktok.tiktok_1_qism.set()
     
     
@@ -340,7 +344,7 @@ async def tik_tok(call: types.CallbackQuery,state: FSMContext):
 @dp.callback_query_handler(text='instagram',state="*")
 async def insta_vd(call: types.CallbackQuery,state: FSMContext):
     await state.finish()
-    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni url manzilini yuboring</b>",parse_mode='HTML',reply_markup=back)
+    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
     await video_yuklash_insta.insta_1_qism.set()
     
 
@@ -351,18 +355,18 @@ async def insta_down(message: types.Message,state: FSMContext):
         natija = tk(url1=u)
         text1 = message.text
         if text1.startswith("https://vm.tiktok.com/" and "https://vt.tiktok.com/"):
-            await message.answer("<b>Iltimos biroz kuting video yuklanmoqda</b>",parse_mode='HTML')
+            await message.answer_chat_action(action="upload_video")
             await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         elif text1.startswith("https://www.tiktok.com/"):
-            await message.answer("<b>Iltimos biroz kuting video yuklanmoqda</b>",parse_mode='HTML')
+            await message.answer_chat_action(action="upload_video")
             await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         else:
-            await message.answer("Url manzili xato")
+            await message.answer("error")
             await state.finish()
     except:
-        await message.answer("<b>Kechirasiz,Bu url manzil orqali men hech nima topmadim</b> ",parse_mode='HTML') 
+        await message.answer("<b>Bu havola xato</b> ",parse_mode='HTML') 
         await state.finish()
     
 
@@ -373,24 +377,35 @@ async def insta_fayl(message: types.Message,state: FSMContext):
         link = message.text
         data = instadownloader(link=link)
         if data == 'Bad':
-            await message.answer("Bu url manzili xato")
+            await message.answer("Bu havola xato")
             await state.finish()
         else:
             if data['type'] == 'image':
-                await message.answer_photo(photo=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
+                await message.answer_chat_action(action="upload_photo")
+                await message.answer_photo(photo=data['media'],caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'video':
-                await message.answer_video(video=data['media'],caption="<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
+                await message.answer_chat_action(action="upload_video")
+                await message.answer_video(video=data['media'],caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'carousel':
                 for i in data['media']:
-                    await message.answer_photo(photo=i,caption="<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
+                    await message.answer_chat_action(action="upload_photo")
+                    await message.answer_photo(photo=i,caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                     await state.finish()
+            elif data['type'] == 'story':
+                await message.answer_chat_action(action="upload_video")
+                await message.answer_video(video=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
+                await state.finish()
+            elif data['type'] == 'story_image':
+                await message.answer_chat_action(action="upload_photo")
+                await message.answer_photo(photo=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
+                await state.finish()
             else:
-                await message.answer("<b>Bu url manzil bo'yicha hech narsa topolmadim</b>")
+                await message.answer("<b>Bu havola bo'yicha hech narsa topolmadim</b>")
                 await state.finish()
     except:
-        await message.answer("Menga faqat Instagramdagi biror postni havolasini jo'nating",parse_mode='HTML')
+        await message.answer("Ooops! Biror nimani xato qildingiz yoki Menda instagramdan video yuklab berish so'rovi tamom bo'lgan",parse_mode='HTML')
         await state.finish()
 
 @dp.callback_query_handler(text = 'back',state="*")
@@ -405,7 +420,7 @@ async def orqagaa(call: types.CallbackQuery,state: FSMContext):
 @dp.message_handler(text = "👨🏻‍💻 Dasturchi",state="*")
 async def admin1_bot(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatinggiz bo'lsa <a href='https://t.me/azikk_0418'>Admin</a> ga murojat qilishingiz mumkin\n<strong>Bizning botdan foydalanayotganinggiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
+    await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
     
 #Youtubedan video ko'chirish qismi
@@ -514,7 +529,7 @@ async def kiril_lotin1(message: types.Message,state: FSMContext):
 @dp.message_handler(text = "Lotin-Кирил",state="*")
 async def lotin_kiril1(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.answer("<b>Lotin тилидан Кирил тилига о'тказиш учун хабар юборинг...</b>",parse_mode='HTML')
+    await message.answer("<b>Lotin тилидан Кирил тилига ўтказиш учун хабар юборинг...</b>",parse_mode='HTML')
     await kiril_lotin_kiril.to_kiril.set()
 
 @dp.message_handler(state=kiril_lotin_kiril.to_lotin)
@@ -526,7 +541,6 @@ async def kiril_lotin2(message: types.Message,state: FSMContext):
         await message.answer(to_latin(xabar))
         
     
-
     
 @dp.message_handler(state=kiril_lotin_kiril.to_kiril)
 async def lotin_kiril2(message: types.Message,state: FSMContext):
@@ -549,7 +563,6 @@ async def eng_to_uz(message: types.Message,state: FSMContext):
         await state.finish()
 
     
-
 
 @dp.message_handler(state=tillar.uz_eng)
 async def uz_eng1(message: types.Message,state: FSMContext):
@@ -694,7 +707,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>Xorazm</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -837,5 +850,5 @@ async def ob_havo_lyuboi_joy(message: types.Message,state: FSMContext):
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
         await state.finish()
     except:
-        await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
+        await message.answer((f"Davlatingiz yoki shaharingizni nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
         await state.finish()
