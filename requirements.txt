@@ -10,4 +10,4 @@ pytube
 aiofiles
 qrcode
 wikipedia
-
+Pillow
