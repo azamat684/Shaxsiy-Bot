@@ -6,7 +6,7 @@ inline_markup = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 back = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="◀️ Orqaga",callback_data='back')]
+    [InlineKeyboardButton(text="↩️ Orqaga",callback_data='back')]
 ])
 
 
@@ -22,3 +22,7 @@ txt_to_voice_lang = InlineKeyboardMarkup(inline_keyboard=[
 txt_to_voice_back = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="↩️ Tilni o'zgartirish",callback_data='txt_voice_back')]
 ])
+
+pdf_uchun_btn = InlineKeyboardMarkup(row_width=1)
+pdf_uchun_btn.add(InlineKeyboardButton(text="🔄 Ha PDF qilaver",callback_data='make_pdf'))
+pdf_uchun_btn.add(InlineKeyboardButton(text='❌ Bekor qilish',callback_data='otmen_pdf'))

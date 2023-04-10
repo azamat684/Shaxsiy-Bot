@@ -82,6 +82,9 @@ class yt_video_save(StatesGroup):
 class Azamat(StatesGroup):
     boshlanish = State()
 
+class pdf(StatesGroup):
+    pdf_start = State()
+
 #Faqat Admin Panel uchun 
 class reklama(StatesGroup):
     reklamaa = State()

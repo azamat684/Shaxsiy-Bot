@@ -1,5 +1,7 @@
 import wikipedia 
 import asyncio
+from PIL import Image
+import io
 from pytube import YouTube
 from datetime import timedelta
 from datetime import datetime
@@ -16,14 +18,14 @@ from aiogram import executor
 from loader import dp, db, bot
 from .transliterated import to_cyrillic,to_latin
 from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til
-from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back
+from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn
 from data.config import CHANNELS
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
 from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru,kiril_lotin_kiril
-from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr
+from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr,pdf
 from aiogram.dispatcher import FSMContext
 import qrcode
 import aiofiles
@@ -422,7 +424,76 @@ async def admin1_bot(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
+@dp.message_handler(text="🏞 IMAGE TO PDF 📁",state="*")
+async def rasm_to_pdf(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.reply("Menga rasm yuboring men uni PDF shakilda sizga tashlab beraman")
+    await pdf.pdf_start.set()
     
+    
+@dp.message_handler(content_types=['text'],state=pdf.pdf_start)
+async def make_pdf(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.reply("Men faqat rasmni PDF formatda qilib beraolaman oddiy xabarni emas!")
+    await pdf.pdf_start.set()
+
+@dp.message_handler(content_types=['photo'],state=pdf.pdf_start)
+async def make_pdf(message: types.Message,state: FSMContext):
+    await state.finish()
+    file_id = message.photo[-1].file_id
+    file = await bot.get_file(file_id=file_id)
+    file_url = bot.get_file_url(file_path=file.file_path)
+    
+    data = await state.get_data()
+    urls = data.get('urls',[])
+    urls.append(file_url)
+    await state.update_data({"urls":urls})
+    
+    
+    await message.reply("✅ Rasm qabul qilindi"
+                        f"\n\nPDF formatga o'tkazaymi 👇🏻?",reply_markup=pdf_uchun_btn)
+
+@dp.callback_query_handler(text="make_pdf", state="*")
+async def make_pdf1(call: types.CallbackQuery, state: FSMContext):
+    await call.answer('Tayyorlanmoqda...')
+    data = await state.get_data()
+    urls = data.get('urls', [])
+    images = []
+    for url in urls:
+        image = Image.open(requests.get(url=url, stream=True).raw)
+        images.append(image)
+
+    pdf = io.BytesIO()
+    images[0].save(pdf, format='PDF', save_all=True, append_images=images[1:], resolution=100)
+    pdf.seek(0)
+    file = types.InputFile(pdf, filename=f"{call.from_user.full_name}.pdf")
+
+    white = '◽️'
+    black = '◼️'
+    xabar = await bot.send_message(chat_id=call.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+    for i in range(1,11):
+        oq = (10-i) * white
+        qora = i*black 
+        await xabar.edit_text(text=f"{qora}{oq}\n"
+                              f"{10*i}% yuklanmoqda...")
+    
+    await xabar.delete()
+    await call.message.answer_document(document=file,caption="@azamats_robot orqali yuklandi ")
+
+
+
+@dp.callback_query_handler(text="otmen_pdf",state="*")
+async def otmen_pdf1(call: types.CallbackQuery,state: FSMContext):
+    await state.update_data({
+        'urls':[]
+    })
+    await call.message.delete()
+    
+    await call.message.answer("Amal bekor qilindi!\nSiz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
+    await state.finish()
+    
+    
+
 #Youtubedan video ko'chirish qismi
 @dp.message_handler(state=yt_video_save.ytt)
 async def youtube(message: types.Message,state: FSMContext):   
@@ -556,10 +627,17 @@ async def eng_to_uz(message: types.Message,state: FSMContext):
         translator = Translator()
         matn = message.text
         translate = translator.translate(matn,dest='uz')
-        await message.answer(f"{message.text} ni o'zbekchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        await state.finish()
+        pd.options.display.max_rows = 10000
+        if len(translate.text) > 2000:
+            for x in range(0, len(translate.text), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text[x:x + 2000]}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+            await state.finish()
     except:
-        await message.answer("Xato😑\nSiz boshqa tilda matn yubordinggiz❌")
+        await message.answer("Oops😑 qandaydir xato ketdi ❌")
         await state.finish()
 
     
@@ -570,10 +648,17 @@ async def uz_eng1(message: types.Message,state: FSMContext):
         translator = Translator()
         matn = message.text
         translate = translator.translate(matn)
-        await message.answer(f"{message.text} ni inglizchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        await state.finish()
+        pd.options.display.max_rows = 10000
+        if len(translate.text) > 2000:
+            for x in range(0, len(translate.text), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text[x:x + 2000]}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+            await state.finish()
     except:
-        await message.answer("Xato")
+        await message.answer("Oops😑 qandaydir xato ketdi ❌")
         await state.finish()
     
 
@@ -583,10 +668,17 @@ async def ru_to_uz(message: types.Message,state: FSMContext):
         translator = Translator()
         matn = message.text
         translate = translator.translate(matn,dest='uz')
-        await message.answer(f"{message.text} ni o'zbekchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        await state.finish()
+        pd.options.display.max_rows = 10000
+        if len(translate.text) > 2000:
+            for x in range(0, len(translate.text), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text[x:x + 2000]}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+            await state.finish()
     except:
-        await message.answer("Xato😑\nSiz boshqa tilda matn yubordinggiz❌")
+        await message.answer("Oops😑 qandaydir xato ketdi ❌")
         await state.finish()
 
 
@@ -596,10 +688,17 @@ async def uz_to_ru(message: types.Message,state: FSMContext):
         translator = Translator()
         matn2 = message.text
         translate = translator.translate(matn2,dest='ru')
-        await message.answer(f"{message.text} ni ruschaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        await state.finish()
+        pd.options.display.max_rows = 10000
+        if len(translate.text) > 2000:
+            for x in range(0, len(translate.text), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text[x:x + 2000]}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+            await state.finish()
     except:
-        await message.answer("Xato 😑\nSiz boshqa tilda matn yubordingiz ❌")
+        await message.answer("Oops😑 qandaydir xato ketdi ❌")
         await state.finish()
         
 
@@ -610,10 +709,17 @@ async def hohlagan_til_tarjima1(message: types.Message,state: FSMContext):
         translator = Translator()
         matn2 = message.text
         translate = translator.translate(matn2,dest='uz')
-        await message.answer(f"{message.text} ni o'zbekchaga tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\nBot creator👨🏻‍💻: @azikk_0418",parse_mode='HTML')
-        await state.finish()
+        pd.options.display.max_rows = 10000
+        if len(translate.text) > 2000:
+            for x in range(0, len(translate.text), 3000):
+                await asyncio.sleep(0.05)
+                await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text[x:x + 2000]}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+                await state.finish()
+        else:
+            await bot.send_message(message.chat.id, f"Matningizni tarjimasi 👇🏻\n\n<code>{translate.text}</code>\n\n👨🏻‍💻 Bot creator: @azikk_0418",parse_mode='HTML')
+            await state.finish()
     except:
-        await message.answer("Xato 😑\nSiz boshqa tilda matn yubordingiz ❌")
+        await message.answer("Oops😑 qandaydir xato ketdi ❌")
         await state.finish()
 
 #Ob-Havo bo'limi

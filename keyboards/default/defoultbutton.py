@@ -7,7 +7,7 @@ markup = ReplyKeyboardMarkup(
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
         [KeyboardButton(text="🔄 Tarjimon"),KeyboardButton(text="📥 Video Yuklash")],
         [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")],
-        [KeyboardButton(text="👨🏻‍💻 Dasturchi")]
+        [KeyboardButton(text="🏞 IMAGE TO PDF 📁"),KeyboardButton(text="👨🏻‍💻 Dasturchi")]
     ],
     resize_keyboard=True
 )
