@@ -28,11 +28,7 @@ async def close_chat(message: types.Message, state: FSMContext):
     await message.answer(text="Siz chatni yakunladingiz\nMen sizni qiziqtirgan mavzu bo'yicha yordam berishim mumkin uning uchun yana ChatGPT bo'limiga qayting", reply_markup=markup)
 
 
-@dp.message_handler(text="🤖 ChatGPT",state="*")
-async def chat_gpt_await(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.reply("Qiziqtirgan savolingiz bo'lsa menga yozishingiz mumkin,Men tez orada javob beraman!",reply_markup=chatni_yakunlash)
-    await ChatGPT.start.set()
+
     
 @dp.message_handler(state=ChatGPT.start)
 async def chat_gpt_start(message: types.Message):

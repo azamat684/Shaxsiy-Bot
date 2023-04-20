@@ -3,11 +3,12 @@ from aiogram.types import ReplyKeyboardMarkup,KeyboardButton
 
 markup = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="✅ Register"),KeyboardButton(text="💬 Text to Voice 🗣")],
+        [KeyboardButton(text="✅ Register"),KeyboardButton(text="🔄 Tarjimon")],
+        [KeyboardButton(text="🏞 Rasmni PDF qilish 📁")],
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
-        [KeyboardButton(text="🔄 Tarjimon"),KeyboardButton(text="📥 Video Yuklash")],
-        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")],
-        [KeyboardButton(text="🏞 IMAGE TO PDF 📁"),KeyboardButton(text="👨🏻‍💻 Dasturchi")]
+        [KeyboardButton(text="💬 Matnni Ovozli xabar qilish 🗣")],
+        [KeyboardButton(text="📥 Video Yuklash"),KeyboardButton(text="👨🏻‍💻 Dasturchi")],
+        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")]
     ],
     resize_keyboard=True
 )

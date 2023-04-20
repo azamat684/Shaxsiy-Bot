@@ -4,12 +4,10 @@ from PIL import Image
 import io
 from pytube import YouTube
 from datetime import timedelta
-from datetime import datetime
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from gtts import gTTS
 from io import BytesIO
 import os
-import math
 import requests
 from googletrans import Translator
 from aiogram import types
@@ -17,18 +15,17 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram import executor
 from loader import dp, db, bot
 from .transliterated import to_cyrillic,to_latin
-from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til
+from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til,chatni_yakunlash
 from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn
 from data.config import CHANNELS
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
-from states.state import video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru,kiril_lotin_kiril
+from states.state import ChatGPT,video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru,kiril_lotin_kiril
 from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr,pdf
 from aiogram.dispatcher import FSMContext
 import qrcode
-import aiofiles
 import pandas as pd
 
 #Qrcode yasash kamandasi /qrcode
@@ -38,18 +35,7 @@ async def qrcode_make(message: types.Message,state: FSMContext):
     await message.reply("Menga qrcode yasash uchun biror matn yuboring!")
     await qrcodee.codee.set()
 
-@dp.message_handler(state=qrcodee.codee)
-async def ddd1(message: types.Message,state: FSMContext):
-    qrcode_uchun_text = message.text
-    img = qrcode.make(qrcode_uchun_text)
-    # Faylni yaratish
-    file_name = f'{message.from_user.id}.png'
-    img.save(file_name)
-    # Generatsiya qilingan QR kodni foydalanuvchiga yuborish
-    with open(file_name, 'rb') as file:
-        await message.reply_photo(file)
-        await state.finish()
-        
+
 @dp.message_handler(text = "🔙Orqaga",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
@@ -65,6 +51,20 @@ async def reg(message: types.Message,state: FSMContext):
 async def kantakt(message: types.Message):
     await message.answer(f"Sizni raqaminggiz muvvofaqiyatli saqlandi",reply_markup=markup)
 
+@dp.message_handler(text="🤖 ChatGPT",state="*")
+async def chat_gpt_await(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.reply("Qiziqtirgan savolingiz bo'lsa menga yozishingiz mumkin,Men tez orada javob beraman!",reply_markup=chatni_yakunlash)
+    await ChatGPT.start.set()
+    
+@dp.message_handler(text="🏞 Rasmni PDF qilish 📁",state="*")
+async def rasm_to_pdf(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.reply("Menga rasm yuboring men uni PDF shakilda sizga tashlab beraman")
+    await pdf.pdf_start.set()
+    
+
+
 #Youtubedan video yuklash bo'limi 
 @dp.message_handler(text="📥 Youtube",state="*")
 async def eng_uz(message: types.Message,state: FSMContext):
@@ -72,11 +72,54 @@ async def eng_uz(message: types.Message,state: FSMContext):
     await message.reply("Menga <b>youtube</b> dagi biror bir videoni havolasini jo'nating\n\n⚠️Eslatma: Havolani jo'natganingizdan keyin biroz kuting,\nVideoni yuklab bermasligiham mumkin!",parse_mode="HTML")
     await yt_video_save.ytt.set()
 
+
+#Wikipedia Bo'limi
+@dp.message_handler(text = "🌏 Wikipedia",state="*")
+async def wikipediaa(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Malumotlar qaysi tilda chiqsin?",reply_markup=wiki_til) 
+    
+#Video Yuklash Bo'limi
+@dp.message_handler(text = "📥 Video Yuklash",state='*')
+async def vd_yuk(message: types.Message,state: FSMContext):
+    await state.finish()
+    # db.create_table_urls()
+    await message.answer("Qaysi ishtimoiy tarmoqdan video yuklamoqchisiz?",reply_markup=inline_markup)
+    
+#Tarjimon Bo'limi
+@dp.message_handler(text="🔄 Tarjimon",state="*")
+async def tarjimon(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Qaysi tildan qaysi tilga tarjima qilmoqchisiz?\nPastdan menyudan tanlang!",reply_markup=til)
+
+    
 #Matnni ovozli xabar qilish
-@dp.message_handler(text = "💬 Text to Voice 🗣",state="*")
+@dp.message_handler(text = "💬 Matnni Ovozli xabar qilish 🗣",state="*")
 async def text_to_voice(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Xabarni qaysi tilda ovozl xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!",reply_markup=txt_to_voice_lang)
+    
+    
+#Admin bo'limi
+@dp.message_handler(text = "👨🏻‍💻 Dasturchi",state="*")
+async def admin1_bot(message: types.Message,state: FSMContext):
+    await state.finish()
+    await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
+
+
+@dp.message_handler(state=qrcodee.codee)
+async def ddd1(message: types.Message,state: FSMContext):
+    qrcode_uchun_text = message.text
+    img = qrcode.make(qrcode_uchun_text)
+    # Faylni yaratish
+    file_name = f'{message.from_user.id}.png'
+    img.save(file_name)
+    # Generatsiya qilingan QR kodni foydalanuvchiga yuborish
+    with open(file_name, 'rb') as file:
+        await message.reply_photo(file)
+        await state.finish()
+        
+
     
 @dp.callback_query_handler(text='txt_voice_back',state="*")
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
@@ -242,11 +285,7 @@ async def txt_voice_back2(call: types.CallbackQuery,state: FSMContext):
     await call.message.answer(f"Siz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
 
 
-#Wikipedia Bo'limi
-@dp.message_handler(text = "🌏 Wikipedia",state="*")
-async def wikipediaa(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.answer("Malumotlar qaysi tilda chiqsin?",reply_markup=wiki_til) 
+
     
 # Ingliz tilda wikipedia topish wikipedia
 @dp.message_handler(text = "English 🇺🇸",state='*')
@@ -275,11 +314,13 @@ async def wiki_uz1(message: types.Message,state: FSMContext):
         w_uz= wikipedia.summary(matn)
         pd.options.display.max_rows = 10000
         if len(w_uz) > 50:
+            await message.answer_chat_action(action="typing")
             for x in range(0, len(w_uz), 3000):
                 await asyncio.sleep(0.05)
                 await bot.send_message(message.chat.id, w_uz[x:x + 3000])
                 await state.finish()
         else:
+            await message.answer_chat_action(action="typing")
             await bot.send_message(message.chat.id, w_uz)
             await state.finish()
     except Exception:
@@ -296,11 +337,13 @@ async def wiki_ru1(message: types.Message,state: FSMContext):
         w_ru = wikipedia.summary(matn)
         pd.options.display.max_rows = 10000
         if len(w_ru) > 50:
+            await message.answer_chat_action(action="typing")
             for x in range(0, len(w_ru), 3000):
                 await asyncio.sleep(0.05)
                 await bot.send_message(message.chat.id, w_ru[x:x + 3000])
                 await state.finish()
         else:
+            await message.answer_chat_action(action="typing")
             await bot.send_message(message.chat.id, w_ru)
             await state.finish()
     except Exception:
@@ -314,11 +357,13 @@ async def wiki_eng3(message: types.Message,state: FSMContext):
         w_eng = wikipedia.summary(matn)
         pd.options.display.max_rows = 10000
         if len(w_eng) > 50:
+            await message.answer_chat_action(action="typing")
             for x in range(0, len(w_eng), 3000):
                 await asyncio.sleep(0.05)
                 await bot.send_message(message.chat.id, w_eng[x:x + 3000])
                 await state.finish()
         else:
+            await message.answer_chat_action(action="typing")
             await bot.send_message(message.chat.id, w_eng)
             await state.finish()
     except Exception:
@@ -327,11 +372,7 @@ async def wiki_eng3(message: types.Message,state: FSMContext):
 
 
 
-#Video Yuklash Bo'limi
-@dp.message_handler(text = "📥 Video Yuklash",state='*')
-async def vd_yuk(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.answer("Qaysi ishtimoiy tarmoqdan video yuklamoqchisiz?",reply_markup=inline_markup)
+
 
 
 
@@ -345,7 +386,6 @@ async def tik_tok(call: types.CallbackQuery,state: FSMContext):
 #Video Yuklash Instagram
 @dp.callback_query_handler(text='instagram',state="*")
 async def insta_vd(call: types.CallbackQuery,state: FSMContext):
-    await state.finish()
     await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
     await video_yuklash_insta.insta_1_qism.set()
     
@@ -357,12 +397,32 @@ async def insta_down(message: types.Message,state: FSMContext):
         natija = tk(url1=u)
         text1 = message.text
         if text1.startswith("https://vm.tiktok.com/" and "https://vt.tiktok.com/"):
+            white = '◽️'
+            black = '◼️'
+            xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+            for i in range(1,11):
+                oq = (10-i) * white
+                qora = i*black 
+                await xabar.edit_text(text=f"{qora}{oq}\n"
+                                    f"{10*i}% yuklanmoqda...")
+    
+            await xabar.delete()
             await message.answer_chat_action(action="upload_video")
             await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         elif text1.startswith("https://www.tiktok.com/"):
+            white = '◽️'
+            black = '◼️'
+            xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+            for i in range(1,11):
+                oq = (10-i) * white
+                qora = i*black 
+                await xabar.edit_text(text=f"{qora}{oq}\n"
+                                    f"{10*i}% yuklanmoqda...")
+    
+            await xabar.delete()
             await message.answer_chat_action(action="upload_video")
-            await message.answer_video(natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
+            await message.answer_video(video=natija['video'],caption="<b>@azamats_robot orqali yuklandi 📥</b>",parse_mode='HTML')
             await state.finish()
         else:
             await message.answer("error")
@@ -417,26 +477,7 @@ async def orqagaa(call: types.CallbackQuery,state: FSMContext):
 
 
 
-
-#Admin bo'limi
-@dp.message_handler(text = "👨🏻‍💻 Dasturchi",state="*")
-async def admin1_bot(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
-
-@dp.message_handler(text="🏞 IMAGE TO PDF 📁",state="*")
-async def rasm_to_pdf(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.reply("Menga rasm yuboring men uni PDF shakilda sizga tashlab beraman")
-    await pdf.pdf_start.set()
-    
-    
-@dp.message_handler(content_types=['text'],state=pdf.pdf_start)
-async def make_pdf(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.reply("Men faqat rasmni PDF formatda qilib beraolaman oddiy xabarni emas!")
-    await pdf.pdf_start.set()
-
+#PDF Tayorlash qismi
 @dp.message_handler(content_types=['photo'],state=pdf.pdf_start)
 async def make_pdf(message: types.Message,state: FSMContext):
     await state.finish()
@@ -456,6 +497,7 @@ async def make_pdf(message: types.Message,state: FSMContext):
 @dp.callback_query_handler(text="make_pdf", state="*")
 async def make_pdf1(call: types.CallbackQuery, state: FSMContext):
     await call.answer('Tayyorlanmoqda...')
+    await call.message.delete()
     data = await state.get_data()
     urls = data.get('urls', [])
     images = []
@@ -481,7 +523,7 @@ async def make_pdf1(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer_document(document=file,caption="@azamats_robot orqali yuklandi ")
 
 
-
+#PDF yasashni bekor qilish
 @dp.callback_query_handler(text="otmen_pdf",state="*")
 async def otmen_pdf1(call: types.CallbackQuery,state: FSMContext):
     await state.update_data({
@@ -543,11 +585,6 @@ async def button_download(call: types.CallbackQuery,state: FSMContext):
             await state.finish()
             os.remove(f"{call.message.chat.id}/{call.message.chat.id}_{yt.title}")
     
-#Tarjimon Bo'limi
-@dp.message_handler(text="🔄 Tarjimon",state="*")
-async def tarjimon(message: types.Message,state: FSMContext):
-    await state.finish()
-    await message.answer("Qaysi tildan qaysi tilga tarjima qilmoqchisiz?\nPastdan menyudan tanlang!",reply_markup=til)
 
 #TARJIMON ENG-UZ #1
 @dp.message_handler(text="Eng🇺🇸-Uz🇺🇿",state="*")

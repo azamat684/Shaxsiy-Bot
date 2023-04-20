@@ -37,18 +37,18 @@ class Database:
             );
 """
         self.execute(sql, commit=True)
-
-#     def create_table_users_phone_numbers(self):
-#         sql = """
-#         CREATE TABLE Phone_numbers (
-#             PRIMARY KEY (id),
-#             id int NOT NULL,
-#             Name varchar(255) NOT NULL,
-#             language varchar(3),
-#             phone_number VARCHAR(255)
-#             );
-# """
+        
+    def create_table_urls(self):
+        sql = """
+        CREATE TABLE Urls1 (
+            id INTEGER PRIMARY KEY NOT NULL,
+            file_id VARCHAR(255),
+            link VARCHAR(255) UNIQUE
+            );
+"""
         self.execute(sql, commit=True)
+            
+            
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -64,16 +64,21 @@ class Database:
         """
         self.execute(sql, parameters=(id, name, language), commit=True)
     
-    # def add_user_phone_numbers(self, id: int, name: str, language: str,phone_number: str):
+    def add_urls(self, file_id: str,link: str):
 
-    #     sql = """
-    #     INSERT INTO Phone_numbers(id, Name, language,phone_number) VALUES(?, ?, ?, ?)
-    #     """
-    #     self.execute(sql, parameters=(id, name, language), commit=True)
+        sql = """
+        INSERT INTO Urls1(file_id, link) VALUES(?, ?)
+        """
+        self.execute(sql, parameters=(file_id, link), commit=True)
     
     def select_all_users(self):
         sql = """
         SELECT * FROM Users
+        """
+        return self.execute(sql, fetchall=True)
+    def select_all_urls(self):
+        sql = """
+        SELECT * FROM Urls1
         """
         return self.execute(sql, fetchall=True)
 
