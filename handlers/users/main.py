@@ -443,23 +443,70 @@ async def insta_fayl(message: types.Message,state: FSMContext):
             await state.finish()
         else:
             if data['type'] == 'image':
+                white = '◽️'
+                black = '◼️'
+                xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+                for i in range(1,11):
+                    oq = (10-i) * white
+                    qora = i*black 
+                    await xabar.edit_text(text=f"{qora}{oq}\n"
+                                        f"{10*i}% yuklanmoqda...")
+        
+                await xabar.delete()
                 await message.answer_chat_action(action="upload_photo")
                 await message.answer_photo(photo=data['media'],caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'video':
+                white = '◽️'
+                black = '◼️'
+                xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+                for i in range(1,11):
+                    oq = (10-i) * white
+                    qora = i*black 
+                    await xabar.edit_text(text=f"{qora}{oq}\n"
+                                        f"{10*i}% yuklanmoqda...")
+        
+                await xabar.delete()
                 await message.answer_chat_action(action="upload_video")
                 await message.answer_video(video=data['media'],caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'carousel':
+                white = '◽️'
+                black = '◼️'
+                xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+                for i in range(1,11):
+                    oq = (10-i) * white
+                    qora = i*black 
+                    await xabar.edit_text(text=f"{qora}{oq}\n"
+                                        f"{10*i}% yuklanmoqda...")
+                await xabar.delete()
                 for i in data['media']:
                     await message.answer_chat_action(action="upload_photo")
                     await message.answer_photo(photo=i,caption=f"{data['title']}\n\n<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                     await state.finish()
             elif data['type'] == 'story':
+                white = '◽️'
+                black = '◼️'
+                xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+                for i in range(1,11):
+                    oq = (10-i) * white
+                    qora = i*black 
+                    await xabar.edit_text(text=f"{qora}{oq}\n"
+                                        f"{10*i}% yuklanmoqda...")
+                await xabar.delete()
                 await message.answer_chat_action(action="upload_video")
                 await message.answer_video(video=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()
             elif data['type'] == 'story_image':
+                white = '◽️'
+                black = '◼️'
+                xabar = await bot.send_message(chat_id=message.from_user.id,text='<b>Yuklanmoqda</b>',parse_mode='HTML')
+                for i in range(1,11):
+                    oq = (10-i) * white
+                    qora = i*black 
+                    await xabar.edit_text(text=f"{qora}{oq}\n"
+                                        f"{10*i}% yuklanmoqda...")
+                await xabar.delete()
                 await message.answer_chat_action(action="upload_photo")
                 await message.answer_photo(photo=data['media'],caption=f"<b>@azamats_robot orqali yuklandi</b>",parse_mode='HTML')
                 await state.finish()

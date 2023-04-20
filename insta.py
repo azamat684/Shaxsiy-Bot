@@ -42,17 +42,3 @@ def instadownloader(link):
             return 'Bad'
     
 # print(instadownloader(link="https://www.instagram.com/tv/CqDy41putKn/?igshid=YmMyMTA2M2Y="))
-# import requests
-
-# url = "https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index"
-
-# querystring = {"url":"https://instagram.com/stories/madiyarbek_06/3074795363110139845?igshid=MDJmNzVkMjY="}
-
-# headers = {
-# 	"X-RapidAPI-Key": "1228981466msh104b9c0a688abe1p1dcbd3jsne2eb18bf9656",
-# 	"X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com"
-# }
-
-# response = requests.request("GET", url, headers=headers, params=querystring)
-
-# print(response.text)
