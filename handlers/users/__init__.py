@@ -1,3 +1,4 @@
+from . import uzmovi_downloader11
 from . import help
 from . import check
 from . import start

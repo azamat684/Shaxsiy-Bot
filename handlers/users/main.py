@@ -27,6 +27,8 @@ from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_
 from aiogram.dispatcher import FSMContext
 import qrcode
 import pandas as pd
+from aiogram.dispatcher.filters import Command
+
 
 #Qrcode yasash kamandasi /qrcode
 @dp.message_handler(commands=['qrcode'],state="*")
@@ -97,7 +99,7 @@ async def tarjimon(message: types.Message,state: FSMContext):
 @dp.message_handler(text = "💬 Matnni Ovozli xabar qilish 🗣",state="*")
 async def text_to_voice(message: types.Message,state: FSMContext):
     await state.finish()
-    await message.reply("Xabarni qaysi tilda ovozl xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!",reply_markup=txt_to_voice_lang)
+    await message.reply("<b><i>Xabarni qaysi tilda ovozli xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!</i></b>",reply_markup=txt_to_voice_lang)
     
     
 #Admin bo'limi
@@ -123,7 +125,7 @@ async def ddd1(message: types.Message,state: FSMContext):
     
 @dp.callback_query_handler(text='txt_voice_back',state="*")
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
-    await call.message.edit_text("Xabarni qaysi tilda ovozl xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!",reply_markup=txt_to_voice_lang)
+    await call.message.edit_text("<b><i>Xabarni qaysi tilda ovozli xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!</i></b>",reply_markup=txt_to_voice_lang)
     await state.finish()
 
 @dp.callback_query_handler(text='uz',state="*")
@@ -175,7 +177,7 @@ async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     
 @dp.callback_query_handler(text='ar')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
-    await call.message.edit_text("<i>Yaxshi Turk tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
+    await call.message.edit_text("<i>Yaxshi Arab tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_ar.speak_ar.set()
     
 
@@ -183,7 +185,7 @@ async def txt_eng(call: types.CallbackQuery,state: FSMContext):
 async def text_to_voice_en(message: types.Message,state: FSMContext):
     text = message.text
     audio = BytesIO()
-    tts = gTTS(text=text, lang='en',slow=False)
+    tts = gTTS(text=text, lang='en',slow=False,)
     tts.write_to_fp(audio)
     audio.seek(0)
     await message.reply_voice(voice=audio)
@@ -383,13 +385,6 @@ async def tik_tok(call: types.CallbackQuery,state: FSMContext):
     await video_yuklash_tiktok.tiktok_1_qism.set()
     
     
-#Video Yuklash Instagram
-@dp.callback_query_handler(text='instagram',state="*")
-async def insta_vd(call: types.CallbackQuery,state: FSMContext):
-    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
-    await video_yuklash_insta.insta_1_qism.set()
-    
-
 @dp.message_handler(state=video_yuklash_tiktok.tiktok_1_qism)
 async def insta_down(message: types.Message,state: FSMContext):
     try:
@@ -431,7 +426,11 @@ async def insta_down(message: types.Message,state: FSMContext):
         await message.answer("<b>Bu havola xato</b> ",parse_mode='HTML') 
         await state.finish()
     
-
+#Video Yuklash Instagram
+@dp.callback_query_handler(text='instagram',state="*")
+async def insta_vd(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
+    await video_yuklash_insta.insta_1_qism.set()
 
 @dp.message_handler(state=video_yuklash_insta.insta_1_qism)
 async def insta_fayl(message: types.Message,state: FSMContext):
@@ -825,7 +824,7 @@ async def toshkent_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>Toshkent</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>Toshkent</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -843,7 +842,7 @@ async def Samarqand_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -861,7 +860,7 @@ async def Buxoro_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -879,7 +878,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -897,7 +896,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>Xorazm</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>Xorazm</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -914,7 +913,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -931,7 +930,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -947,7 +946,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>Surxondaryo</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>Surxondaryo</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -963,7 +962,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -979,7 +978,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -995,7 +994,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -1012,7 +1011,7 @@ async def Nukus_ob_havo(message: types.Message):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
@@ -1036,7 +1035,7 @@ async def ob_havo_lyuboi_joy(message: types.Message,state: FSMContext):
         yuqori_harorat = response['main']['temp_max']
         pas_harorat = response['main']['temp_min']
         bosim = response['main']['pressure']
-        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamat_dosmukhambetov_fans'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
+        jami = f"<b>{city_name}</b> dagi ob-havo malumotlari🌤\n\n<code>\n🙂Harorat: {harorat} gradus\n☁️Namlik: {namlik}%\n😶Bosim: {bosim}\n☀️Yuqori harorat: {yuqori_harorat}\n🥶Pas harorat: {pas_harorat}</code>\n\n\nKanal <a href='https://t.me/azamatcoders'>Azamat's Blog</a> ✅🔰\nBot creator👨🏻‍💻: @azikk_0418"
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
         await state.finish()
     except:

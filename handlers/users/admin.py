@@ -6,6 +6,12 @@ import pandas as pd
 from aiogram.dispatcher import FSMContext
 from states.state import reklama
 from aiogram.dispatcher.filters.state import State
+from aiogram.dispatcher.filters import Command
+
+
+@dp.message_handler(Command('admin',prefixes='!/'),state="*",user_id=ADMINS)
+async def admin_panels(message: types.Message):
+    await message.answer(f"Assalomu aleykum {message.from_user.full_name}! Admin panelga xush kelibsiz")
 
 
 @dp.message_handler(text="/allusers", user_id=ADMINS)

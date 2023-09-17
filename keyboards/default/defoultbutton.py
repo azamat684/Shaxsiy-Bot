@@ -8,7 +8,8 @@ markup = ReplyKeyboardMarkup(
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
         [KeyboardButton(text="💬 Matnni Ovozli xabar qilish 🗣")],
         [KeyboardButton(text="📥 Video Yuklash"),KeyboardButton(text="👨🏻‍💻 Dasturchi")],
-        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")]
+        [KeyboardButton(text="📥 Youtube"),KeyboardButton(text="🤖 ChatGPT")],
+        [KeyboardButton(text="🤖 Games"),KeyboardButton(text="Uzmovi")]
     ],
     resize_keyboard=True
 )
@@ -47,3 +48,13 @@ registratsiya.add(KeyboardButton(text="🔙Orqaga"))
 wiki_til = ReplyKeyboardMarkup(resize_keyboard=True)
 wiki_til.add(KeyboardButton(text="🔙Orqaga"),KeyboardButton(text="O'zbek 🇺🇿"))
 wiki_til.add(KeyboardButton(text="English 🇺🇸"),KeyboardButton(text="Русский 🇷🇺"))
+
+
+
+stickers_markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
+stickers_markup.insert(KeyboardButton(text='🎲'))
+stickers_markup.insert(KeyboardButton(text='🎯'))
+stickers_markup.insert(KeyboardButton(text='🏀'))
+stickers_markup.insert(KeyboardButton(text='⚽'))
+stickers_markup.insert(KeyboardButton(text='🎰'))
+stickers_markup.insert(KeyboardButton(text='🎳'))

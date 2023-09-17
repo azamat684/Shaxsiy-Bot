@@ -2,7 +2,7 @@ import sqlite3
 
 
 class Database:
-    def __init__(self, path_to_db="main.db"):
+    def __init__(self, path_to_db="C:/Users/Kazbek/Desktop/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db"):
         self.path_to_db = path_to_db
 
     @property
@@ -48,6 +48,15 @@ class Database:
 """
         self.execute(sql, commit=True)
             
+    def create_table_game(self):
+        sql = """
+        CREATE TABLE Game (
+            id PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            winner VARCHAR(50) NOT NULL
+    );
+"""
+        self.execute(sql, commit=True)
             
     @staticmethod
     def format_args(sql, parameters: dict):
@@ -70,6 +79,10 @@ class Database:
         INSERT INTO Urls1(file_id, link) VALUES(?, ?)
         """
         self.execute(sql, parameters=(file_id, link), commit=True)
+        
+    def add_game(self, user_id, winner):
+        sql = "INSERT INTO Game (user_id, winner) VALUES (?, ?)"
+        self.execute(sql, parameters=(user_id, winner,), fetchone=True)
     
     def select_all_users(self):
         sql = """
@@ -89,6 +102,11 @@ class Database:
 
         return self.execute(sql, parameters=parameters, fetchone=True)
 
+    def select_all_games(self, **kwargs):
+        sql = "SELECT * FROM Game WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=parameters, fetchall=True)
+    
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 

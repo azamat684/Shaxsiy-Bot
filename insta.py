@@ -2,12 +2,12 @@ import requests
 import json
 
 def instadownloader(link):
-    url = "https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index"
-    querystring = {"url":link}
+    url = "https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index"    
+    querystring = {"url": link}
 
     headers = {
-	"X-RapidAPI-Key": "1228981466msh104b9c0a688abe1p1dcbd3jsne2eb18bf9656",
-	"X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com"
+        "X-RapidAPI-Key": "bb6699699emsh97298a41c6cf5a7p1ddcc8jsn0cfc50572209",
+        "X-RapidAPI-Host": "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com"
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
     rest = json.loads(response.text)

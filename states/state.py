@@ -91,3 +91,9 @@ class reklama(StatesGroup):
     
     
 
+class uzmovii(StatesGroup):
+    start = State()
+
+class GameState(StatesGroup):
+    sender_user = State()
+    results = State()

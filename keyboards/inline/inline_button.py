@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 
 inline_markup = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Tik Tok",callback_data="tik_tok"),InlineKeyboardButton(text="Instagram",callback_data="instagram")],
+    [InlineKeyboardButton(text="Tik Tok",callback_data="tik_tok"),InlineKeyboardButton(text="Instagram",callback_data="instagram"),InlineKeyboardButton(text="🎬 Uzmovi",callback_data="uzmovi_down")],
     [InlineKeyboardButton(text='🏠 Asosiy menyu', callback_data='txt_voice_back2')]
 ])
 
@@ -30,3 +30,23 @@ pdf_uchun_btn.add(InlineKeyboardButton(text='❌ Bekor qilish',callback_data='ot
 share_button = InlineKeyboardMarkup(row_width=1)
 share_button.add(InlineKeyboardButton(text='Ulashish', switch_inline_query=''))
 """
+
+admin_panels_button = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="👥 Count all users",callback_data='count_users'),InlineKeyboardButton(text="➕ Send advertise",callback_data='send_advertise')],
+    [InlineKeyboardButton(text="")]
+])
+
+
+results_markup = InlineKeyboardMarkup(row_width=1)
+results_markup.insert(InlineKeyboardButton(text='Natijalar', callback_data='results'))
+
+def continue_markup(winner: str):
+    markup = InlineKeyboardMarkup(row_width=1)
+    if winner == 'user':
+        text = "Yutishda davom etaman"
+    elif winner == 'bot':
+        text = 'Botni yutaman'
+    else:
+        text = "Yana o'ynayman"
+    markup.insert(InlineKeyboardButton(text=text, callback_data='continue'))
+    return markup
