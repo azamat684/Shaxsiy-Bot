@@ -97,3 +97,6 @@ class uzmovii(StatesGroup):
 class GameState(StatesGroup):
     sender_user = State()
     results = State()
+    
+class Jokes_lang(StatesGroup):
+    set_lang = State()

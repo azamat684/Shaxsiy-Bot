@@ -9,6 +9,10 @@ back = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="↩️ Orqaga",callback_data='back')]
 ])
 
+jokes_lang = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🇺🇸 English",callback_data='joke_en'),InlineKeyboardButton(text="🇺🇿 O'zbek",callback_data='joke_uz')],
+    [InlineKeyboardButton(text="🇷🇺 Pусский",callback_data='joke_ru')]
+])
 
 txt_to_voice_lang = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="❌ O'zbek",callback_data='uz'),InlineKeyboardButton(text="Rus Tili",callback_data='ru')],

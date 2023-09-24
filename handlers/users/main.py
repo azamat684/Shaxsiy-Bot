@@ -16,19 +16,19 @@ from aiogram import executor
 from loader import dp, db, bot
 from .transliterated import to_cyrillic,to_latin
 from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til,chatni_yakunlash
-from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn
+from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn,jokes_lang
 from data.config import CHANNELS
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 from downloader import tk
 from insta import instadownloader
 from states.state import ChatGPT,video_yuklash_tiktok,yt_video_save,video_yuklash_insta,tillar,txt_to_voice,Azamat,tillar2,tillar3,tillar4,tillar5,wikipediakuu,qrcodee,wikipedia_eng,wikipedia_ru,kiril_lotin_kiril
-from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr,pdf
+from states.state import txt_to_voice_ar,txt_to_voice_de,txt_to_voice_en,txt_to_voice_ru,txt_to_voice_es,txt_to_voice_fr,txt_to_voice_hi,txt_to_voice_pt,txt_to_voice_tr,pdf,Jokes_lang
 from aiogram.dispatcher import FSMContext
 import qrcode
 import pandas as pd
 from aiogram.dispatcher.filters import Command
-
+import pyjokes
 
 #Qrcode yasash kamandasi /qrcode
 @dp.message_handler(commands=['qrcode'],state="*")
@@ -108,7 +108,39 @@ async def admin1_bot(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
-
+#Jokes
+@dp.message_handler(text = "😂 Jokes",state="*")
+async def jokess(message: types.Message,state: FSMContext):
+    await message.reply(text="Qaysi tilda latifa aytay?",reply_markup=jokes_lang)
+    await Jokes_lang.set_lang.set()
+    
+    
+@dp.callback_query_handler(text = "joke_en",state=Jokes_lang.set_lang)
+async def jokes_en(call: types.CallbackQuery,state: FSMContext):
+    await call.message.delete()
+    get_jokes = pyjokes.get_joke(category='neutral')
+    await call.message.answer(get_jokes)
+    await state.finish()
+    
+@dp.callback_query_handler(text = "joke_uz",state=Jokes_lang.set_lang)
+async def jokes_uz(call: types.CallbackQuery,state: FSMContext):
+    await call.message.delete()
+    translator = Translator()
+    get_jokes = pyjokes.get_joke(language='en',category='neutral')
+    tarjima = translator.translate(get_jokes,dest='uz')
+    await call.message.answer(tarjima.text)
+    await state.finish()
+    
+@dp.callback_query_handler(text = "joke_ru",state=Jokes_lang.set_lang)
+async def jokes_ru(call: types.CallbackQuery,state: FSMContext):
+    await call.message.delete()
+    translator = Translator()
+    get_jokes = pyjokes.get_joke(category='neutral')
+    tarjima = translator.translate(get_jokes,dest='ru')
+    await call.message.answer(tarjima.text)
+    await state.finish()
+    
+    
 @dp.message_handler(state=qrcodee.codee)
 async def ddd1(message: types.Message,state: FSMContext):
     qrcode_uchun_text = message.text

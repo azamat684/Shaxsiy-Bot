@@ -4,7 +4,7 @@ from aiogram.types import ReplyKeyboardMarkup,KeyboardButton
 markup = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="✅ Register"),KeyboardButton(text="🔄 Tarjimon")],
-        [KeyboardButton(text="🏞 Rasmni PDF qilish 📁")],
+        [KeyboardButton(text="🏞 Rasmni PDF qilish 📁"),KeyboardButton(text='😂 Jokes')],
         [KeyboardButton(text="⛅️ Ob-Havo"),KeyboardButton(text="🌏 Wikipedia")],
         [KeyboardButton(text="💬 Matnni Ovozli xabar qilish 🗣")],
         [KeyboardButton(text="📥 Video Yuklash"),KeyboardButton(text="👨🏻‍💻 Dasturchi")],
