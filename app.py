@@ -11,7 +11,7 @@ async def on_startup(dispatcher):
 
     # Ma'lumotlar bazasini yaratamiz:
     try:
-        db.create_table_game()
+        db.create_table_users()
     except Exception as err:
         print(err)
 
