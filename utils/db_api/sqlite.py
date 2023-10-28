@@ -2,7 +2,7 @@ import sqlite3
 
 
 class Database:
-    def __init__(self, path_to_db="C:/Users/Kazbek/Desktop/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db"):
+    def __init__(self, path_to_db="D:/azamat_all/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db"):
         self.path_to_db = path_to_db
 
     @property
@@ -40,10 +40,10 @@ class Database:
         
     def create_table_urls(self):
         sql = """
-        CREATE TABLE Urls1 (
-            id INTEGER PRIMARY KEY NOT NULL,
-            file_id VARCHAR(255),
-            link VARCHAR(255) UNIQUE
+        CREATE TABLE Urls (
+            id INTEGER PRIMARY KEY,
+            file_id TEXT NOT NULL,
+            link TEXT NOT NULL
             );
 """
         self.execute(sql, commit=True)
@@ -76,7 +76,7 @@ class Database:
     def add_urls(self, file_id: str,link: str):
 
         sql = """
-        INSERT INTO Urls1(file_id, link) VALUES(?, ?)
+        INSERT INTO Urls(file_id, link) VALUES(?, ?)
         """
         self.execute(sql, parameters=(file_id, link), commit=True)
         
@@ -91,7 +91,7 @@ class Database:
         return self.execute(sql, fetchall=True)
     def select_all_urls(self):
         sql = """
-        SELECT * FROM Urls1
+        SELECT * FROM Urls
         """
         return self.execute(sql, fetchall=True)
 

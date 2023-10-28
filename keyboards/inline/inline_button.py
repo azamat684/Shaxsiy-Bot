@@ -9,11 +9,25 @@ back = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="↩️ Orqaga",callback_data='back')]
 ])
 
+back_from_history = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🏠 Asosiy menyu",callback_data='back_from_history'),InlineKeyboardButton(text="More...",callback_data='more_info')]
+])
+
+back_from_history_to_home = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🏠 Asosiy menyu",callback_data='back_from_history')]
+])
+
 jokes_lang = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="🇺🇸 English",callback_data='joke_en'),InlineKeyboardButton(text="🇺🇿 O'zbek",callback_data='joke_uz')],
     [InlineKeyboardButton(text="🇷🇺 Pусский",callback_data='joke_ru')]
 ])
-
+reaction_jokes = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="😐",callback_data='😐'),InlineKeyboardButton(text="🙂",callback_data='🙂'),InlineKeyboardButton(text="😂",callback_data='😂')],
+    [InlineKeyboardButton(text="↩️ Orqaga",callback_data='back_jokes'),InlineKeyboardButton(text="🆕 Yangisi",callback_data='new_joke')]
+])
+back_jokes = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="↩️ Orqaga",callback_data='back_jokes'),InlineKeyboardButton(text="🆕 Yangisi",callback_data='new_joke')]
+])
 txt_to_voice_lang = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="❌ O'zbek",callback_data='uz'),InlineKeyboardButton(text="Rus Tili",callback_data='ru')],
     [InlineKeyboardButton(text="Ingliz Tili",callback_data="en"),InlineKeyboardButton(text="Ispan Tili",callback_data="es")],
@@ -38,6 +52,10 @@ share_button.add(InlineKeyboardButton(text='Ulashish', switch_inline_query=''))
 admin_panels_button = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="👥 Count all users",callback_data='count_users'),InlineKeyboardButton(text="➕ Send advertise",callback_data='send_advertise')],
     [InlineKeyboardButton(text="")]
+])
+
+button_for_history = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🫳🏿 Bilish ✔️",callback_data='bilish_history')]
 ])
 
 

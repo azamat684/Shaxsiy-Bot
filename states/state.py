@@ -99,4 +99,6 @@ class GameState(StatesGroup):
     results = State()
     
 class Jokes_lang(StatesGroup):
-    set_lang = State()
+    set_lang_eng = State()
+    set_lang_uz = State()
+    set_lang_ru = State()

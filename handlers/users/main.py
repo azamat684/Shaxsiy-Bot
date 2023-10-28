@@ -16,7 +16,7 @@ from aiogram import executor
 from loader import dp, db, bot
 from .transliterated import to_cyrillic,to_latin
 from keyboards.default.defoultbutton import markup,shaharlar,wiki_til,registratsiya,til,chatni_yakunlash
-from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn,jokes_lang
+from keyboards.inline.inline_button import txt_to_voice_lang,txt_to_voice_back,pdf_uchun_btn,jokes_lang,back_jokes, reaction_jokes
 from data.config import CHANNELS
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
@@ -109,37 +109,77 @@ async def admin1_bot(message: types.Message,state: FSMContext):
     await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
 #Jokes
-@dp.message_handler(text = "😂 Jokes",state="*")
+@dp.message_handler(text = "😅 Latifalar",state="*")
 async def jokess(message: types.Message,state: FSMContext):
     await message.reply(text="Qaysi tilda latifa aytay?",reply_markup=jokes_lang)
-    await Jokes_lang.set_lang.set()
+
     
-    
-@dp.callback_query_handler(text = "joke_en",state=Jokes_lang.set_lang)
+@dp.callback_query_handler(text = "back_jokes",state="*")
+async def new_jokes_en(call: types.CallbackQuery,state: FSMContext):
+    await call.message.edit_text(text="Qaysi tilda latifa aytay?",reply_markup=jokes_lang)
+      
+
+@dp.callback_query_handler(text = "joke_en",state="*")
 async def jokes_en(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     get_jokes = pyjokes.get_joke(category='neutral')
-    await call.message.answer(get_jokes)
-    await state.finish()
+    await call.message.answer(get_jokes,reply_markup=reaction_jokes)
+    await Jokes_lang.set_lang_eng.set()
     
-@dp.callback_query_handler(text = "joke_uz",state=Jokes_lang.set_lang)
+@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_eng)
+async def new_jokes_en(call: types.CallbackQuery,state: FSMContext):
+    get_jokes = pyjokes.get_joke(category='neutral')
+    await call.message.edit_text(text=get_jokes,reply_markup=reaction_jokes)
+ 
+
+@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state="*")
+async def jokes_react_en(call: types.CallbackQuery,state: FSMContext):
+    await call.answer('Thanks for reaction 👌')
+    await call.message.edit_reply_markup(reply_markup=back_jokes)
+    
+@dp.callback_query_handler(text = "joke_uz",state="*")
 async def jokes_uz(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     translator = Translator()
     get_jokes = pyjokes.get_joke(language='en',category='neutral')
     tarjima = translator.translate(get_jokes,dest='uz')
-    await call.message.answer(tarjima.text)
-    await state.finish()
+    await call.message.answer(tarjima.text, reply_markup=reaction_jokes)
+    await Jokes_lang.set_lang_uz.set()
     
-@dp.callback_query_handler(text = "joke_ru",state=Jokes_lang.set_lang)
+@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_uz)
+async def new_jokes_uz(call: types.CallbackQuery,state: FSMContext):
+    translator = Translator()
+    get_jokes = pyjokes.get_joke(language='en',category='neutral')
+    tarjima = translator.translate(get_jokes,dest='uz')
+    await call.message.edit_text(text=tarjima.text,reply_markup=reaction_jokes)
+ 
+
+@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state="*")
+async def jokes_react_uz(call: types.CallbackQuery,state: FSMContext):
+    await call.answer('Reaksiya uchun raxmat 👌')
+    await call.message.edit_reply_markup(reply_markup=back_jokes)
+
+@dp.callback_query_handler(text = "joke_ru",state="*")
 async def jokes_ru(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     translator = Translator()
     get_jokes = pyjokes.get_joke(category='neutral')
     tarjima = translator.translate(get_jokes,dest='ru')
-    await call.message.answer(tarjima.text)
-    await state.finish()
+    await call.message.answer(tarjima.text, reply_markup=reaction_jokes)
+    await Jokes_lang.set_lang_ru.set()
     
+@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_ru)
+async def new_jokes_ru(call: types.CallbackQuery,state: FSMContext):
+    translator = Translator()
+    get_jokes = pyjokes.get_joke(language='en',category='neutral')
+    tarjima = translator.translate(get_jokes,dest='ru')
+    await call.message.edit_text(text=tarjima.text,reply_markup=reaction_jokes)
+ 
+
+@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state=Jokes_lang.set_lang_ru)
+async def jokes_react_ru(call: types.CallbackQuery,state: FSMContext):
+    await call.answer('Спасибо за реакцию 👌')
+    await call.message.edit_reply_markup(reply_markup=back_jokes)
     
 @dp.message_handler(state=qrcodee.codee)
 async def ddd1(message: types.Message,state: FSMContext):

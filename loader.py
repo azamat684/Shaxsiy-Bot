@@ -6,4 +6,4 @@ from data import config
 bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
-db = Database(path_to_db="C:/Users/Kazbek/Desktop/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db")
+db = Database(path_to_db="D:/azamat_all/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db")
