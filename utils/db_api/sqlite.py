@@ -2,7 +2,7 @@ import sqlite3
 
 
 class Database:
-    def __init__(self, path_to_db="D:/azamat_all/MY AIOGRAM BOTS/Shaxsiy-Bot/data/main.db"):
+    def __init__(self, path_to_db="data/main.db"):
         self.path_to_db = path_to_db
 
     @property
