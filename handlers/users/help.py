@@ -2,9 +2,9 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandHelp
 from aiogram.dispatcher import FSMContext
 from loader import dp,bot
+from filters.IsPrivate import IsPrivate
 
-
-@dp.message_handler(CommandHelp(),state="*")
+@dp.message_handler(IsPrivate(),CommandHelp(),state="*")
 async def bot_help(message: types.Message,state: FSMContext):
         await state.finish()
         bot_info = await bot.get_me()

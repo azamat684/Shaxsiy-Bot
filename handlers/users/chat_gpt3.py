@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from states.state import ChatGPT
 import asyncio
 from data.config import openai_apikey
-
+from filters.IsPrivate import IsPrivate
 ########### ChatGPT Bot ##############
 
 openai.api_key = openai_apikey
@@ -22,7 +22,7 @@ def chat_with_gpt(messages):
 message_history=[]
 
 ##### ChatGpt START ######
-@dp.message_handler(text='❌ Chatni yakunlash', state='*')
+@dp.message_handler(IsPrivate(),text='❌ Chatni yakunlash', state='*')
 async def close_chat(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(text="Siz chatni yakunladingiz\nMen sizni qiziqtirgan mavzu bo'yicha yordam berishim mumkin uning uchun yana ChatGPT bo'limiga qayting", reply_markup=markup)
@@ -30,7 +30,7 @@ async def close_chat(message: types.Message, state: FSMContext):
 
 
     
-@dp.message_handler(state=ChatGPT.start)
+@dp.message_handler(IsPrivate(),state=ChatGPT.start)
 async def chat_gpt_start(message: types.Message):
     await message.answer_chat_action(action='typing')
     stickers = ['⏳', '⌛️']

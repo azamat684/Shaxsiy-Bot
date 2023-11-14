@@ -29,37 +29,38 @@ import qrcode
 import pandas as pd
 from aiogram.dispatcher.filters import Command
 import pyjokes
+from filters.IsPrivate import IsPrivate
 
 #Qrcode yasash kamandasi /qrcode
-@dp.message_handler(commands=['qrcode'],state="*")
+@dp.message_handler(IsPrivate(),commands=['qrcode'],state="*")
 async def qrcode_make(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Menga qrcode yasash uchun biror matn yuboring!")
     await qrcodee.codee.set()
 
 
-@dp.message_handler(text = "🔙Orqaga",state="*")
+@dp.message_handler(IsPrivate(),text = "🔙Orqaga",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Siz asosiy bo'limdasiz kerakli bo'limni tanlang!",reply_markup=markup)
         
 #Ro'yxatdan o'tish Bo'limi
-@dp.message_handler(text = "✅ Register",state="*")
+@dp.message_handler(IsPrivate(),text = "✅ Register",state="*")
 async def reg(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer(f"Telefon raqaminggizni jo'nating!\n\nPastda menyuda <b>'📞 Telefon Raqamni jo'natish'</b> tugmasi bor o'shani bosing",parse_mode='HTML',reply_markup=registratsiya)
 
-@dp.message_handler(content_types='contact')
+@dp.message_handler(IsPrivate(),content_types='contact')
 async def kantakt(message: types.Message):
     await message.answer(f"Sizni raqaminggiz muvvofaqiyatli saqlandi",reply_markup=markup)
 
-@dp.message_handler(text="🤖 ChatGPT",state="*")
+@dp.message_handler(IsPrivate(),text="🤖 ChatGPT",state="*")
 async def chat_gpt_await(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Qiziqtirgan savolingiz bo'lsa menga yozishingiz mumkin,Men tez orada javob beraman!",reply_markup=chatni_yakunlash)
     await ChatGPT.start.set()
     
-@dp.message_handler(text="🏞 Rasmni PDF qilish 📁",state="*")
+@dp.message_handler(IsPrivate(),text="🏞 Rasmni PDF qilish 📁",state="*")
 async def rasm_to_pdf(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Menga rasm yuboring men uni PDF shakilda sizga tashlab beraman")
@@ -68,7 +69,7 @@ async def rasm_to_pdf(message: types.Message,state: FSMContext):
 
 
 #Youtubedan video yuklash bo'limi 
-@dp.message_handler(text="📥 Youtube",state="*")
+@dp.message_handler(IsPrivate(),text="📥 Youtube",state="*")
 async def eng_uz(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Menga <b>youtube</b> dagi biror bir videoni havolasini jo'nating\n\n⚠️Eslatma: Havolani jo'natganingizdan keyin biroz kuting,\nVideoni yuklab bermasligiham mumkin!",parse_mode="HTML")
@@ -76,68 +77,68 @@ async def eng_uz(message: types.Message,state: FSMContext):
 
 
 #Wikipedia Bo'limi
-@dp.message_handler(text = "🌏 Wikipedia",state="*")
+@dp.message_handler(IsPrivate(),text = "🌏 Wikipedia",state="*")
 async def wikipediaa(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Malumotlar qaysi tilda chiqsin?",reply_markup=wiki_til) 
     
 #Video Yuklash Bo'limi
-@dp.message_handler(text = "📥 Video Yuklash",state='*')
+@dp.message_handler(IsPrivate(),text = "📥 Video Yuklash",state='*')
 async def vd_yuk(message: types.Message,state: FSMContext):
     await state.finish()
     # db.create_table_urls()
     await message.answer("Qaysi ishtimoiy tarmoqdan video yuklamoqchisiz?",reply_markup=inline_markup)
     
 #Tarjimon Bo'limi
-@dp.message_handler(text="🔄 Tarjimon",state="*")
+@dp.message_handler(IsPrivate(),text="🔄 Tarjimon",state="*")
 async def tarjimon(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Qaysi tildan qaysi tilga tarjima qilmoqchisiz?\nPastdan menyudan tanlang!",reply_markup=til)
 
     
 #Matnni ovozli xabar qilish
-@dp.message_handler(text = "💬 Matnni Ovozli xabar qilish 🗣",state="*")
+@dp.message_handler(IsPrivate(),text = "💬 Matnni Ovozli xabar qilish 🗣",state="*")
 async def text_to_voice(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("<b><i>Xabarni qaysi tilda ovozli xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!</i></b>",reply_markup=txt_to_voice_lang)
     
     
 #Admin bo'limi
-@dp.message_handler(text = "👨🏻‍💻 Dasturchi",state="*")
+@dp.message_handler(IsPrivate(),text = "👨🏻‍💻 Dasturchi",state="*")
 async def admin1_bot(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Salom!\n👨🏽‍💻 Dasturchi: <a href='https://t.me/azikk_0418'>Azamat Dosmukhambetov</a>\n\nTaklif yoki bot bo'yicha shikoyatingiz bo'lsa <a href='https://t.me/azikk_0418'>Dasturchiga</a> ga murojat qiling iltimos\n<strong>Mening telegram botimdan foydalanayotganingiz uchun raxmat😊</strong>",parse_mode='HTML',disable_web_page_preview=True)
 
 #Jokes
-@dp.message_handler(text = "😅 Latifalar",state="*")
+@dp.message_handler(IsPrivate(),text = "😅 Latifalar",state="*")
 async def jokess(message: types.Message,state: FSMContext):
     await message.reply(text="Qaysi tilda latifa aytay?",reply_markup=jokes_lang)
 
     
-@dp.callback_query_handler(text = "back_jokes",state="*")
+@dp.callback_query_handler(IsPrivate(),text = "back_jokes",state="*")
 async def new_jokes_en(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text(text="Qaysi tilda latifa aytay?",reply_markup=jokes_lang)
       
 
-@dp.callback_query_handler(text = "joke_en",state="*")
+@dp.callback_query_handler(IsPrivate(),text = "joke_en",state="*")
 async def jokes_en(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     get_jokes = pyjokes.get_joke(category='neutral')
     await call.message.answer(get_jokes,reply_markup=reaction_jokes)
     await Jokes_lang.set_lang_eng.set()
     
-@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_eng)
+@dp.callback_query_handler(IsPrivate(),text = "new_joke",state=Jokes_lang.set_lang_eng)
 async def new_jokes_en(call: types.CallbackQuery,state: FSMContext):
     get_jokes = pyjokes.get_joke(category='neutral')
     await call.message.edit_text(text=get_jokes,reply_markup=reaction_jokes)
  
 
-@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state="*")
+@dp.callback_query_handler(IsPrivate(),lambda call: call.data in ["😐","🙂","😂"],state="*")
 async def jokes_react_en(call: types.CallbackQuery,state: FSMContext):
     await call.answer('Thanks for reaction 👌')
     await call.message.edit_reply_markup(reply_markup=back_jokes)
     
-@dp.callback_query_handler(text = "joke_uz",state="*")
+@dp.callback_query_handler(IsPrivate(),text = "joke_uz",state="*")
 async def jokes_uz(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     translator = Translator()
@@ -146,7 +147,7 @@ async def jokes_uz(call: types.CallbackQuery,state: FSMContext):
     await call.message.answer(tarjima.text, reply_markup=reaction_jokes)
     await Jokes_lang.set_lang_uz.set()
     
-@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_uz)
+@dp.callback_query_handler(IsPrivate(),text = "new_joke",state=Jokes_lang.set_lang_uz)
 async def new_jokes_uz(call: types.CallbackQuery,state: FSMContext):
     translator = Translator()
     get_jokes = pyjokes.get_joke(language='en',category='neutral')
@@ -154,12 +155,12 @@ async def new_jokes_uz(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text(text=tarjima.text,reply_markup=reaction_jokes)
  
 
-@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state="*")
+@dp.callback_query_handler(IsPrivate(),lambda call: call.data in ["😐","🙂","😂"],state="*")
 async def jokes_react_uz(call: types.CallbackQuery,state: FSMContext):
     await call.answer('Reaksiya uchun raxmat 👌')
     await call.message.edit_reply_markup(reply_markup=back_jokes)
 
-@dp.callback_query_handler(text = "joke_ru",state="*")
+@dp.callback_query_handler(IsPrivate(),text = "joke_ru",state="*")
 async def jokes_ru(call: types.CallbackQuery,state: FSMContext):
     await call.message.delete()
     translator = Translator()
@@ -168,7 +169,7 @@ async def jokes_ru(call: types.CallbackQuery,state: FSMContext):
     await call.message.answer(tarjima.text, reply_markup=reaction_jokes)
     await Jokes_lang.set_lang_ru.set()
     
-@dp.callback_query_handler(text = "new_joke",state=Jokes_lang.set_lang_ru)
+@dp.callback_query_handler(IsPrivate(),text = "new_joke",state=Jokes_lang.set_lang_ru)
 async def new_jokes_ru(call: types.CallbackQuery,state: FSMContext):
     translator = Translator()
     get_jokes = pyjokes.get_joke(language='en',category='neutral')
@@ -176,12 +177,12 @@ async def new_jokes_ru(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text(text=tarjima.text,reply_markup=reaction_jokes)
  
 
-@dp.callback_query_handler(lambda call: call.data in ["😐","🙂","😂"],state=Jokes_lang.set_lang_ru)
+@dp.callback_query_handler(IsPrivate(),lambda call: call.data in ["😐","🙂","😂"],state=Jokes_lang.set_lang_ru)
 async def jokes_react_ru(call: types.CallbackQuery,state: FSMContext):
     await call.answer('Спасибо за реакцию 👌')
     await call.message.edit_reply_markup(reply_markup=back_jokes)
     
-@dp.message_handler(state=qrcodee.codee)
+@dp.message_handler(IsPrivate(),state=qrcodee.codee)
 async def ddd1(message: types.Message,state: FSMContext):
     qrcode_uchun_text = message.text
     img = qrcode.make(qrcode_uchun_text)
@@ -195,42 +196,42 @@ async def ddd1(message: types.Message,state: FSMContext):
         
 
     
-@dp.callback_query_handler(text='txt_voice_back',state="*")
+@dp.callback_query_handler(IsPrivate(),text='txt_voice_back',state="*")
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<b><i>Xabarni qaysi tilda ovozli xabarga aylantirmoqchisiz...?\n(O'zbek tili ishlamaydi)!</i></b>",reply_markup=txt_to_voice_lang)
     await state.finish()
 
-@dp.callback_query_handler(text='uz',state="*")
+@dp.callback_query_handler(IsPrivate(),text='uz',state="*")
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await state.finish()
     await call.answer("❌ Mendagi malumotlar o'zbek tilini qo'llab quvvatlamaydi")
 
-@dp.callback_query_handler(text='en')
+@dp.callback_query_handler(IsPrivate(),text='en')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Ingliz tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_en.speak_en.set()
     
-@dp.callback_query_handler(text='ru')
+@dp.callback_query_handler(IsPrivate(),text='ru')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Rus tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_ru.speak_ru.set()
     
-@dp.callback_query_handler(text='es')
+@dp.callback_query_handler(IsPrivate(),text='es')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Ispan tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_es.speak_es.set()
     
-@dp.callback_query_handler(text='pt')
+@dp.callback_query_handler(IsPrivate(),text='pt')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Portugal tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_pt.speak_pt.set()
     
-@dp.callback_query_handler(text='fr')
+@dp.callback_query_handler(IsPrivate(),text='fr')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Frantsuz tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_fr.speak_fr.set()
     
-@dp.callback_query_handler(text='de')
+@dp.callback_query_handler(IsPrivate(),text='de')
 async def txt_eng(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<i>Yaxshi Nemis tili tanlandi ✅ Endi menga matn yuboring...</i>",parse_mode='HTML',reply_markup=txt_to_voice_back)
     await txt_to_voice_de.speak_de.set()
@@ -362,25 +363,25 @@ async def txt_voice_back2(call: types.CallbackQuery,state: FSMContext):
 
     
 # Ingliz tilda wikipedia topish wikipedia
-@dp.message_handler(text = "English 🇺🇸",state='*')
+@dp.message_handler(IsPrivate(),text = "English 🇺🇸",state='*')
 async def wiki_eng(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("What do you need information about?")
     await wikipedia_eng.engg.set()
 
-@dp.message_handler(text = "O'zbek 🇺🇿",state="*")
+@dp.message_handler(IsPrivate(),text = "O'zbek 🇺🇿",state="*")
 async def wiki_uz(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("Nima haqida malumot kerak?")
     await wikipediakuu.uzz.set()
     
-@dp.message_handler(text = "Русский 🇷🇺",state='*')
+@dp.message_handler(IsPrivate(),text = "Русский 🇷🇺",state='*')
 async def wiki_ru(message: types.Message,state: FSMContext):
     await state.finish()
     await message.reply("О чем вам нужна информация?")
     await wikipedia_ru.ruu.set()
     
-@dp.message_handler(state=wikipediakuu.uzz)
+@dp.message_handler(IsPrivate(),state=wikipediakuu.uzz)
 async def wiki_uz1(message: types.Message,state: FSMContext):
     try:
         matn = message.text
@@ -403,7 +404,7 @@ async def wiki_uz1(message: types.Message,state: FSMContext):
         
     
 
-@dp.message_handler(state=wikipedia_ru.ruu)
+@dp.message_handler(IsPrivate(),state=wikipedia_ru.ruu)
 async def wiki_ru1(message: types.Message,state: FSMContext):
     try:
         matn = message.text
@@ -423,7 +424,7 @@ async def wiki_ru1(message: types.Message,state: FSMContext):
     except Exception:
         await message.reply("🤷🏻‍♂️ К сожалению, никакой информации найти не удалось!")
 
-@dp.message_handler(state=wikipedia_eng.engg)
+@dp.message_handler(IsPrivate(),state=wikipedia_eng.engg)
 async def wiki_eng3(message: types.Message,state: FSMContext):
     try:
         matn = message.text
@@ -451,13 +452,13 @@ async def wiki_eng3(message: types.Message,state: FSMContext):
 
 
 #Video Yuklash Tik Tok
-@dp.callback_query_handler(text="tik_tok",state="*")
+@dp.callback_query_handler(IsPrivate(),text="tik_tok",state="*")
 async def tik_tok(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
     await video_yuklash_tiktok.tiktok_1_qism.set()
     
     
-@dp.message_handler(state=video_yuklash_tiktok.tiktok_1_qism)
+@dp.message_handler(IsPrivate(),state=video_yuklash_tiktok.tiktok_1_qism)
 async def insta_down(message: types.Message,state: FSMContext):
     try:
         u = message.text
@@ -499,12 +500,12 @@ async def insta_down(message: types.Message,state: FSMContext):
         await state.finish()
     
 #Video Yuklash Instagram
-@dp.callback_query_handler(text='instagram',state="*")
+@dp.callback_query_handler(IsPrivate(),text='instagram',state="*")
 async def insta_vd(call: types.CallbackQuery,state: FSMContext):
     await call.message.edit_text("<b>Yuklamoqchi bo'lgan videongizni havolasini yuboring</b>",parse_mode='HTML',reply_markup=back)
     await video_yuklash_insta.insta_1_qism.set()
 
-@dp.message_handler(state=video_yuklash_insta.insta_1_qism)
+@dp.message_handler(IsPrivate(),state=video_yuklash_insta.insta_1_qism)
 async def insta_fayl(message: types.Message,state: FSMContext):
     try:
         link = message.text
@@ -596,7 +597,7 @@ async def orqagaa(call: types.CallbackQuery,state: FSMContext):
 
 
 #PDF Tayorlash qismi
-@dp.message_handler(content_types=['photo'],state=pdf.pdf_start)
+@dp.message_handler(IsPrivate(),content_types=['photo'],state=pdf.pdf_start)
 async def make_pdf(message: types.Message,state: FSMContext):
     await state.finish()
     file_id = message.photo[-1].file_id
@@ -612,7 +613,7 @@ async def make_pdf(message: types.Message,state: FSMContext):
     await message.reply("✅ Rasm qabul qilindi"
                         f"\n\nPDF formatga o'tkazaymi 👇🏻?",reply_markup=pdf_uchun_btn)
 
-@dp.callback_query_handler(text="make_pdf", state="*")
+@dp.callback_query_handler(IsPrivate(),text="make_pdf", state="*")
 async def make_pdf1(call: types.CallbackQuery, state: FSMContext):
     await call.answer('Tayyorlanmoqda...')
     await call.message.delete()
@@ -642,7 +643,7 @@ async def make_pdf1(call: types.CallbackQuery, state: FSMContext):
 
 
 #PDF yasashni bekor qilish
-@dp.callback_query_handler(text="otmen_pdf",state="*")
+@dp.callback_query_handler(IsPrivate(),text="otmen_pdf",state="*")
 async def otmen_pdf1(call: types.CallbackQuery,state: FSMContext):
     await state.update_data({
         'urls':[]
@@ -655,7 +656,7 @@ async def otmen_pdf1(call: types.CallbackQuery,state: FSMContext):
     
 
 #Youtubedan video ko'chirish qismi
-@dp.message_handler(state=yt_video_save.ytt)
+@dp.message_handler(IsPrivate(),state=yt_video_save.ytt)
 async def youtube(message: types.Message,state: FSMContext):   
       if message.text.startswith('https://youtube.com') or message.text.startswith('https://www.youtube.com/') or message.text.startswith('https://youtu.be/') or message.text.startswith('http://youtube.com/') or message.text.startswith('http://youtu.be/'):
             url = message.text
@@ -685,7 +686,7 @@ async def youtube(message: types.Message,state: FSMContext):
             
             
 
-@dp.callback_query_handler(text="download")
+@dp.callback_query_handler(IsPrivate(),text="download")
 async def button_download(call: types.CallbackQuery,state: FSMContext):
       url = call.message.html_text
       yt = YouTube(url)
@@ -705,7 +706,7 @@ async def button_download(call: types.CallbackQuery,state: FSMContext):
     
 
 #TARJIMON ENG-UZ #1
-@dp.message_handler(text="Eng🇺🇸-Uz🇺🇿",state="*")
+@dp.message_handler(IsPrivate(),text="Eng🇺🇸-Uz🇺🇿",state="*")
 async def eng_uz(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Tarjima qilmoqchi bo'lgan so'zingizni yuboring")
@@ -713,21 +714,21 @@ async def eng_uz(message: types.Message,state: FSMContext):
     
 
 #TARJIMON UZ-ENG #2
-@dp.message_handler(text="Uz🇺🇿-Eng🇺🇸",state="*")
+@dp.message_handler(IsPrivate(),text="Uz🇺🇿-Eng🇺🇸",state="*")
 async def uz_eng(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Tarjima qilmoqchi bo'lgan so'zingizni yuboring")
     await tillar.uz_eng.set()
 
 #TARJIMON RU-UZ #3
-@dp.message_handler(text="Ru🇷🇺-Uz🇺🇿",state="*")
+@dp.message_handler(IsPrivate(),text="Ru🇷🇺-Uz🇺🇿",state="*")
 async def ru_uz(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Tarjima qilmoqchi bo'lgan so'zinggizni yuboring")
     await tillar3.ru_uz.set()
     
 #TARJIMON UZ-RU #4
-@dp.message_handler(text="Uz🇺🇿-Ru🇷🇺",state="*")
+@dp.message_handler(IsPrivate(),text="Uz🇺🇿-Ru🇷🇺",state="*")
 async def uz_ru(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Tarjima qilmoqchi bo'lgan so'zinggizni yuboring")
@@ -736,7 +737,7 @@ async def uz_ru(message: types.Message,state: FSMContext):
     
     
 #TARJIMON HOHLAGAN-TIL #5
-@dp.message_handler(text="?-Uz 🇺🇿",state="*")
+@dp.message_handler(IsPrivate(),text="?-Uz 🇺🇿",state="*")
 async def hohlagan_til_tarjima(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Siz hohlagan tildagi matnni yuboring men o'zbek tiliga tarjima qilib beraman!")
@@ -744,7 +745,7 @@ async def hohlagan_til_tarjima(message: types.Message,state: FSMContext):
     
     
 #TARJIMON Кирил-Lotin #6
-@dp.message_handler(text = "Кирил-Lotin",state="*")
+@dp.message_handler(IsPrivate(),text = "Кирил-Lotin",state="*")
 async def kiril_lotin1(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("<b>Кирил tilidan Lotin tiliga o'tkazish uchun xabar yuboring...</b>",parse_mode='HTML')
@@ -752,7 +753,7 @@ async def kiril_lotin1(message: types.Message,state: FSMContext):
     
     
 #TARJIMON Lotin-Кирил #7
-@dp.message_handler(text = "Lotin-Кирил",state="*")
+@dp.message_handler(IsPrivate(),text = "Lotin-Кирил",state="*")
 async def lotin_kiril1(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("<b>Lotin тилидан Кирил тилига ўтказиш учун хабар юборинг...</b>",parse_mode='HTML')
@@ -878,13 +879,13 @@ async def hohlagan_til_tarjima1(message: types.Message,state: FSMContext):
         await state.finish()
 
 #Ob-Havo bo'limi
-@dp.message_handler(text = "⛅️ Ob-Havo",state="*")
+@dp.message_handler(IsPrivate(),text = "⛅️ Ob-Havo",state="*")
 async def ob_havo(message: types.Message,state: FSMContext):
     await state.finish()
     await message.answer("Pastdan menyular orqali viloyatingizni tanlang ✅",reply_markup=shaharlar)
     
 #Ob-Havo bo'limi menyulari
-@dp.message_handler(text='Toshkent')
+@dp.message_handler(IsPrivate(),text='Toshkent')
 async def toshkent_ob_havo(message: types.Message):
     try:
         city_name = "Tashkent"
@@ -902,7 +903,7 @@ async def toshkent_ob_havo(message: types.Message):
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
         
-@dp.message_handler(text='Samarqand')
+@dp.message_handler(IsPrivate(),text='Samarqand')
 async def Samarqand_ob_havo(message: types.Message):
     try:
         city_name = "Samarqand"
@@ -920,7 +921,7 @@ async def Samarqand_ob_havo(message: types.Message):
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
 
-@dp.message_handler(text='Buxoro')
+@dp.message_handler(IsPrivate(),text='Buxoro')
 async def Buxoro_ob_havo(message: types.Message):
     try:
         city_name = "Buxoro"
@@ -938,7 +939,7 @@ async def Buxoro_ob_havo(message: types.Message):
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
 
-@dp.message_handler(text='Nukus')
+@dp.message_handler(IsPrivate(),text='Nukus')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Nukus"
@@ -956,7 +957,7 @@ async def Nukus_ob_havo(message: types.Message):
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
 
-@dp.message_handler(text='Xorazm')
+@dp.message_handler(IsPrivate(),text='Xorazm')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Urganch"
@@ -973,7 +974,7 @@ async def Nukus_ob_havo(message: types.Message):
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
     
-@dp.message_handler(text='Qashqadaryo')
+@dp.message_handler(IsPrivate(),text='Qashqadaryo')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Qashqadaryo"
@@ -990,7 +991,7 @@ async def Nukus_ob_havo(message: types.Message):
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
-@dp.message_handler(text="Farg'ona")
+@dp.message_handler(IsPrivate(),text="Farg'ona")
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Farg'ona"
@@ -1006,7 +1007,7 @@ async def Nukus_ob_havo(message: types.Message):
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
-@dp.message_handler(text='Surxondaryo')
+@dp.message_handler(IsPrivate(),text='Surxondaryo')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Tirmiz"
@@ -1022,7 +1023,7 @@ async def Nukus_ob_havo(message: types.Message):
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
-@dp.message_handler(text='Namangan')
+@dp.message_handler(IsPrivate(),text='Namangan')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Namangan"
@@ -1038,7 +1039,7 @@ async def Nukus_ob_havo(message: types.Message):
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
-@dp.message_handler(text='Andijon')
+@dp.message_handler(IsPrivate(),text='Andijon')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Andijon"
@@ -1054,7 +1055,7 @@ async def Nukus_ob_havo(message: types.Message):
         await message.answer(jami,parse_mode='HTML',disable_web_page_preview=True)
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
-@dp.message_handler(text='Jizzax')
+@dp.message_handler(IsPrivate(),text='Jizzax')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Jizzax"
@@ -1071,7 +1072,7 @@ async def Nukus_ob_havo(message: types.Message):
     except:
         await message.answer((f"Davlatlar yoki shaharlar nomini tekshirib takroran yuboring yoki menda {city_name} xaqida malumot yo'q uzr!"))
 
-@dp.message_handler(text='Navoiy')
+@dp.message_handler(IsPrivate(),text='Navoiy')
 async def Nukus_ob_havo(message: types.Message):
     try:
         city_name = "Navoiy"
@@ -1090,12 +1091,12 @@ async def Nukus_ob_havo(message: types.Message):
 
 
 #Ob-Havo Bo'limi Hohlagan davlatni ob-havosini bilish qismi
-@dp.message_handler(text="Hohlagan davlatni ob-havosin bilish",state="*")
+@dp.message_handler(IsPrivate(),text="Hohlagan davlatni ob-havosin bilish",state="*")
 async def ob(message: types.Message):
     await message.reply("Qayerni ob havosi bo'yicha malumot kerak men sizga malumot beraman hududni nomini to'g'ri yozsanggiz albatta😊\nHudud nomini kiriting?")
     await Azamat.boshlanish.set()
 
-@dp.message_handler(state=Azamat.boshlanish)
+@dp.message_handler(IsPrivate(),state=Azamat.boshlanish)
 async def ob_havo_lyuboi_joy(message: types.Message,state: FSMContext):
     try:
         city_name = message.text

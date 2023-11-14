@@ -1,4 +1,4 @@
-aiogram
+aiogram==2.25.1
 environs
 pandas
 googletrans==3.1.0a0
@@ -11,3 +11,4 @@ aiofiles
 qrcode
 wikipedia
 Pillow
+pyjokes

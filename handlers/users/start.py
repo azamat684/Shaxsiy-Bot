@@ -11,11 +11,11 @@ from loader import dp, db, bot
 from keyboards.default.defoultbutton import markup
 from keyboards.inline.inline_button import inline_markup,back
 from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
-
+from filters.IsPrivate import IsPrivate
 
 from aiogram.dispatcher import FSMContext
 
-@dp.message_handler(CommandStart(),state='*')
+@dp.message_handler(IsPrivate(),CommandStart(),state='*')
 async def bot_start(message: types.Message,state: FSMContext):
     await state.finish()
     name = message.from_user.full_name

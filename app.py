@@ -10,8 +10,9 @@ async def on_startup(dispatcher):
     await set_default_commands(dispatcher)
 
     # Ma'lumotlar bazasini yaratamiz:
+    
     try:
-        db.create_table_game()
+        db.create_table_channels()
     except Exception as err:
         print(err)
 
