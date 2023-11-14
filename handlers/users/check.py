@@ -4,9 +4,9 @@ from utils.misc import subscription
 from aiogram import types
 from keyboards.inline.subscription import check_button
 from keyboards.default.defoultbutton import markup
+from filters.IsPrivate import IsPrivate
 
-
-@dp.callback_query_handler(text="check_subs")
+@dp.callback_query_handler(IsPrivate(),text="check_subs")
 async def checker(call: types.CallbackQuery):
     await call.answer()
     final_status = True

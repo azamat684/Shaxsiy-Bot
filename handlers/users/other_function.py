@@ -10,8 +10,9 @@ import requests
 from googletrans import Translator
 import pandas as pd
 from loader import bot
+from filters.IsPrivate import IsPrivate
 
-@dp.message_handler(text="🤖 Games", state="*")
+@dp.message_handler(IsPrivate(),text="🤖 Games", state="*")
 async def start_other(message: types.Message,state: FSMContext):
     await message.answer("Menga quyidagi emojilardan birini jo'nating ikkimiz bahslashamiz qani kim yutadi ekan?! 😅😉",reply_markup=stickers_markup)
     await GameState.sender_user.set()
@@ -19,7 +20,7 @@ async def start_other(message: types.Message,state: FSMContext):
 
 
 
-@dp.message_handler(content_types=['dice'], state=GameState.sender_user)
+@dp.message_handler(IsPrivate(),content_types=['dice'], state=GameState.sender_user)
 async def bot_echo(message: types.Message):
     user_score = int(message.dice.value)
     emoji = message.dice.emoji
@@ -39,7 +40,7 @@ async def bot_echo(message: types.Message):
             db.add_game(user_id=message.from_user.id, winner='tie')
 
 
-@dp.message_handler(commands=['results'], state='*')
+@dp.message_handler(IsPrivate(),commands=['results'], state='*')
 async def get_results(message: types.Message, state: FSMContext):
     await state.finish()
     games = db.select_all_games(user_id=message.from_user.id)
@@ -63,7 +64,7 @@ async def get_results(message: types.Message, state: FSMContext):
     await message.answer(text=f"{user_result} marta yutdingiz!😎\n{bot_result} marta yutqazdingiz!😌\n{tie_result} marta durrang!😉\n\nO'ynashda davom etamizmi?🤨", reply_markup=continue_markup(winner=winner))
     await GameState.results.set()
 
-@dp.callback_query_handler(text='results', state='*')
+@dp.callback_query_handler(IsPrivate(),text='results', state='*')
 async def get_results_in_game(call: types.CallbackQuery, state: FSMContext):
     await state.finish()
     await call.message.delete()
@@ -89,7 +90,7 @@ async def get_results_in_game(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer(text=f"{user_result} marta yutdingiz!😎\n{bot_result} marta yutqazdingiz!😌\n{tie_result} marta durrang!😉\n\nO'ynashda davom etamizmi?🤨", reply_markup=continue_markup(winner=winner))
     await GameState.results.set()
 
-@dp.callback_query_handler(state=GameState.results)
+@dp.callback_query_handler(IsPrivate(),state=GameState.results)
 async def continue_game(call: types.CallbackQuery):
     if call.data == 'continue':
         await call.message.answer(text="O'yinni davom ettirish uchun quyidagi stikerlardan birini menga yuboring!", reply_markup=stickers_markup)
@@ -98,12 +99,12 @@ async def continue_game(call: types.CallbackQuery):
         
         
         
-@dp.callback_query_handler(text="uzmovi_down",state="*")
+@dp.callback_query_handler(IsPrivate(),text="uzmovi_down",state="*")
 async def uzmovi12(call: types.CallbackQuery):
     await call.message.answer("send url...")
     await uzmovii.start.set()
 
-@dp.message_handler(state=uzmovii.start)
+@dp.message_handler(IsPrivate(),state=uzmovii.start)
 async def uzmovi123(message: types.Message, state: FSMContext):
     urls = message.text
     try:
@@ -119,7 +120,7 @@ async def uzmovi123(message: types.Message, state: FSMContext):
 
 #History
 # #What happen this date in history
-@dp.message_handler(text='✨ Tarix',state="*")
+@dp.message_handler(IsPrivate(),text='✨ Tarix',state="*")
 async def history(message: types.Message, state: FSMContext):
     await message.answer(f"<b>{message.text} bo'limigi xush kelibsiz 😊</b>\nBu bo'limda siz aynan bugungi sanada tarixda nimalar bo'lganini bilib olasiz!\n\nBilish uchun bosing 👇🏿!",
                          reply_markup=button_for_history)
@@ -150,9 +151,9 @@ def history_das(start,stop):
     
     
     
-@dp.callback_query_handler(text='bilish_history',state="*")
+@dp.callback_query_handler(IsPrivate(),text='bilish_history',state="*")
 async def history_bilish(call: types.CallbackQuery, state: FSMContext):
-    
+    await call.answer("Bu bir necha daqiqa olishi mumkin...")
 # API ni istalgan joydan oling (masalan, History API)
     await call.message.delete()
     await call.message.answer_chat_action(action='typing')
@@ -167,11 +168,10 @@ async def history_bilish_more(call: types.CallbackQuery, state: FSMContext):
     data = history_das(start=20,stop=45)
     if data:
         await call.message.edit_text(text=f"Bugungi kun tarixda sodir bo'lgan voqealar\n{data}\n",reply_markup=back_from_history_to_home)
-      
     else:
         await call.message.edit_text(text="Ma'lumotlarni olishda xatolik sodir bo'ldi.", reply_markup=back_from_history_to_home)
 
-@dp.callback_query_handler(text='back_from_history',state="*")
+@dp.callback_query_handler(IsPrivate(),text='back_from_history',state="*")
 async def history_to_home(call: types.CallbackQuery, state: FSMContext):
     await call.message.delete()
     await call.message.answer("🏠 Asosiy menyu", reply_markup=markup)

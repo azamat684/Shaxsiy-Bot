@@ -57,7 +57,28 @@ class Database:
     );
 """
         self.execute(sql, commit=True)
-            
+        
+    def create_table_channels(self):
+        sql = """
+        CREATE TABLE Channels (
+            id PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            channel_id BIGINT NOT NULL UNIQUE,
+            username VARCHAR(255)  
+    );
+"""  
+        self.execute(sql, commit=True)
+        
+    def create_table_groups(self):
+        sql = """
+        CREATE TABLE Groups (
+            id PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            group_id BIGINT NOT NULL UNIQUE,
+            username VARCHAR(255)
+    );
+"""
+        self.execute(sql, commit=True)        
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -84,11 +105,40 @@ class Database:
         sql = "INSERT INTO Game (user_id, winner) VALUES (?, ?)"
         self.execute(sql, parameters=(user_id, winner,), fetchone=True)
     
+    def add_channel(self, title: str,channel_id: int,username: str):
+        # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
+
+        sql = """
+        INSERT INTO Users(id, title, channel_id, username) VALUES(?, ?, ?)
+        """
+        self.execute(sql, parameters=(title, channel_id, username), commit=True)
+    
+    def add_groups(self, title: str, group_id: int):
+        # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
+
+        sql = """
+        INSERT INTO Users(id, title, group_id, username)) VALUES(?, ?, ?)
+        """
+        self.execute(sql, parameters=(title, group_id), commit=True)
+    
     def select_all_users(self):
         sql = """
         SELECT * FROM Users
         """
         return self.execute(sql, fetchall=True)
+    
+    def select_all_channels(self):
+        sql = """
+        SELECT * FROM Channels
+        """
+        return self.execute(sql, fetchall=True)
+    
+    def select_all_groups(self):
+        sql = """
+        SELECT * FROM Groups
+        """
+        return self.execute(sql, fetchall=True)
+    
     def select_all_urls(self):
         sql = """
         SELECT * FROM Urls
@@ -110,6 +160,12 @@ class Database:
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 
+    def count_channels(self):
+        return self.execute("SELECT COUNT(*) FROM Channels;", fetchone=True)
+    
+    def count_groups(self):
+        return self.execute("SELECT COUNT(*) FROM Groups;", fetchone=True)
+    
     def update_user_email(self, email, id):
         # SQL_EXAMPLE = "UPDATE Users SET email=mail@gmail.com WHERE id=12345"
 
@@ -121,6 +177,11 @@ class Database:
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
 
+    def delete_channels(self):
+        self.execute("DELETE FROM Channels WHERE TRUE", commit=True)
+        
+    def delete_groups(self):
+        self.execute("DELETE FROM Groups WHERE TRUE", commit=True)
 
 def logger(statement):
     print(f"""
