@@ -13,6 +13,7 @@ async def on_startup(dispatcher):
     
     try:
         db.create_table_channels()
+        db.create_table_users()
     except Exception as err:
         print(err)
 
