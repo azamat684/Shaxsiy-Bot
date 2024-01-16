@@ -30,7 +30,7 @@ async def bot_start(message: types.Message,state: FSMContext):
     # Foydalanuvchini bazaga qo'shamiz
     try:
         db.add_user(id=message.from_user.id,name=name,language=message.from_user.language_code)
-        await message.answer(f"Assalomu alaykum <a href='tg://user?id={message.from_user.id}'>{name}</a>!\n<b><i>Quyidagi kanalga obuna bo'ling 👇🏻</i></b>", reply_markup=markup)
+        await message.answer(f"Assalomu aleykum <a href='tg://user?id={message.from_user.id}'>{name}</a>!\n<b><i>Quyidagi kanalga obuna bo'ling 👇🏻</i></b>", reply_markup=markup)
         # Adminga xabar beramiz
         count = db.count_users()[0]
         if message.from_user.username is not None: 
